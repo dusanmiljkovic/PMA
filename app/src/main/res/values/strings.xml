@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Email</string>
     <string name="splash_screen_logo">Splash screen logo.</string>
+
+    <string name="login_logo">Login logo</string>
+    <string name="login_title">Login</string>
+    <string name="login_username_hint">username</string>
+    <string name="login_password_hint">password</string>
+    <string name="login_button">Login</string>
 </resources>
