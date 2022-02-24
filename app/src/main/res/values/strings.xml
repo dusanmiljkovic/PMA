@@ -44,4 +44,13 @@
     <string name="email_menu_forward_email">Forward</string>
     <string name="emails_menu_search">Search</string>
     <string name="email_item_sender_icon">Email sender icon</string>
+    <string name="email_reply_button">Reply</string>
+    <string name="email_forward_button">Forward</string>
+    <string name="new_email_menu_send">Send</string>
+    <string name="create_email_to">To</string>
+    <string name="create_email_cc">Cc</string>
+    <string name="create_email_bcc">Bcc</string>
+    <string name="create_email_subject">Subject</string>
+    <string name="create_email_type_something">Type something</string>
+    <string name="create_email_cancel_button">Cancel</string>
 </resources>
