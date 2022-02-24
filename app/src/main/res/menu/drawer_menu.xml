@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_emails"
+            android:title="@string/menu_title_emails" />
+
+        <item
+            android:id="@+id/menu_folders"
+            android:title="@string/menu_title_folders" />
+
+        <item
+            android:id="@+id/menu_profile"
+            android:title="@string/menu_title_profile" />
+
+        <item
+            android:id="@+id/menu_contacts"
+            android:title="@string/menu_title_contacts" />
+
+        <item
+            android:id="@+id/menu_settings"
+            android:title="@string/menu_title_settings" />
+
+        <item
+            android:id="@+id/menu_logout"
+            android:title="@string/menu_title_logout" />
+
+    </group>
+</menu>

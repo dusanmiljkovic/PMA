@@ -12,6 +12,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Email">
         <activity
+            android:name=".activities.EmailActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ContactsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.FoldersActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.BaseActivity"
+            android:exported="true"
+            android:label="@string/title_activity_base"
+            android:theme="@style/Theme.Email.NoActionBar" />
+        <activity
+            android:name=".activities.CreateEmailActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.EmailsActivity"
             android:exported="true" />
         <activity

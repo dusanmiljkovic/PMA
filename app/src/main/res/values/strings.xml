@@ -7,4 +7,41 @@
     <string name="login_username_hint">username</string>
     <string name="login_password_hint">password</string>
     <string name="login_button">Login</string>
+    <string name="create_email_button">Create email button</string>
+    <string name="menu_title_emails">Emails</string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_title_folders">Folders</string>
+    <string name="menu_title_profile">Profile</string>
+    <string name="menu_title_contacts">Contacts</string>
+    <string name="menu_title_settings">Settings</string>
+    <string name="menu_title_logout">Logout</string>
+    <string name="navigation_header_image">Navigation header image</string>
+    <string name="navigation_header_title">John Deo</string>
+    <string name="navigation_header_subtitle">johndoe@mail.com</string>
+    <string name="email_menu_save_email">Save email</string>
+    <string name="email_menu_delete_email">Delete email</string>
+    <string name="email_menu_reply_email">Reply</string>
+    <string name="email_menu_reply_all_email">Reply all</string>
+    <string name="email_menu_forward_email">Forward</string>
+    <string name="emails_menu_search">Search</string>
+    <string name="email_item_sender_icon">Email sender icon</string>
 </resources>

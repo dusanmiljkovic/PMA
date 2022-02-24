@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/ic_baseline_save_24"
+        android:title="@string/email_menu_save_email"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/ic_baseline_delete_outline_24"
+        android:title="@string/email_menu_delete_email"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_reply"
+        android:icon="@drawable/ic_baseline_reply_24"
+        android:title="@string/email_menu_reply_email"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_reply_all"
+        android:icon="@drawable/ic_baseline_reply_all_24"
+        android:title="@string/email_menu_reply_all_email"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_forward"
+        android:icon="@drawable/ic_baseline_forward_24"
+        android:title="@string/email_menu_forward_email"
+        app:showAsAction="never" />
+
+</menu>
