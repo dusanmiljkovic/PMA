@@ -23,7 +23,9 @@ public class CreateEmailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_email);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         initToolbar();
         Objects.requireNonNull(getSupportActionBar()).setTitle("Compose");
     }

@@ -53,4 +53,6 @@
     <string name="create_email_subject">Subject</string>
     <string name="create_email_type_something">Type something</string>
     <string name="create_email_cancel_button">Cancel</string>
+    <string name="folders_menu_create_new_folder">Create new folder</string>
+    <string name="folder_menu_edit_folder">Edit folder</string>
 </resources>

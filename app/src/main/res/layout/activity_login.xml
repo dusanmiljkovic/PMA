@@ -4,22 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="15dp"
     tools:context=".activities.LoginActivity">
 
     <ImageView
         android:id="@+id/login_logo"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/logo"
         android:layout_above="@id/login_title"
-        android:contentDescription="@string/login_logo" />
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/login_logo"
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
         android:text="@string/login_title"

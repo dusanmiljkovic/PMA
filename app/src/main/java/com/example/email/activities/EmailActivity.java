@@ -24,7 +24,9 @@ public class EmailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
 
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         initToolbar();
         Objects.requireNonNull(getSupportActionBar()).setTitle("Email");
     }

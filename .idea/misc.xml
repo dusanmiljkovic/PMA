@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="0.15989583333333332" />
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_create_new_folder_24.xml" value="0.137" />
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_edit_24.xml" value="0.137" />
         <entry key="app/src/main/res/drawable/circular_image_border.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_baseline_reply_all_24.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.158" />
@@ -11,14 +13,18 @@
         <entry key="app/src/main/res/layout/activity_base.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/activity_basic.xml" value="0.10416666666666667" />
         <entry key="app/src/main/res/layout/activity_create_email.xml" value="0.10416666666666667" />
+        <entry key="app/src/main/res/layout/activity_create_folder.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/activity_email.xml" value="0.10416666666666667" />
         <entry key="app/src/main/res/layout/activity_emails.xml" value="0.10081053698074975" />
+        <entry key="app/src/main/res/layout/activity_folder.xml" value="0.161231884057971" />
+        <entry key="app/src/main/res/layout/activity_folders.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1671875" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1671875" />
         <entry key="app/src/main/res/layout/app_bar_base.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/content_base.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/email_list_item.xml" value="0.10416666666666667" />
+        <entry key="app/src/main/res/layout/folder_list_item.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/fragment_slideshow.xml" value="0.15932117527862208" />
@@ -30,6 +36,8 @@
         <entry key="app/src/main/res/menu/email_options_menu.xml" value="0.13333333333333333" />
         <entry key="app/src/main/res/menu/emails_option_menu.xml" value="0.21296296296296297" />
         <entry key="app/src/main/res/menu/emails_options_menu.xml" value="0.21296296296296297" />
+        <entry key="app/src/main/res/menu/folder_options_menu.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/menu/folders_options_menu.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/menu/new_email_options_menu.xml" value="0.32760416666666664" />
       </map>
     </option>
