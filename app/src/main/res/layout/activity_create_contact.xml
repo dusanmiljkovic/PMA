@@ -33,7 +33,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/contact_first_name"
+            android:id="@+id/create_contact_first_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,11 +48,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/contact_last_name"
+            android:id="@+id/create_contact_last_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/contact_first_name"
+            android:layout_below="@id/create_contact_first_name"
             android:hint="Last name">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -63,11 +63,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/contact_email"
+            android:id="@+id/create_contact_email"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/contact_last_name"
+            android:layout_below="@id/create_contact_last_name"
             android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -80,12 +80,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/contact_email"
+            android:layout_below="@id/create_contact_email"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/contact_cancel_button"
+                android:id="@+id/create_contact_cancel_button"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                 app:cornerRadius="10dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/contact_save_button"
+                android:id="@+id/create_contact_save_button"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

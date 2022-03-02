@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.email.R;
 import com.example.email.adapters.ContactListAdapter;
 import com.example.email.models.Contact;
+import com.example.email.models.Email;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,15 @@ public class ContactsActivity extends BaseActivity {
         contactListAdapter = new ContactListAdapter(contacts);
         recyclerView.setAdapter(contactListAdapter);
 
-        contactListAdapter.setOnItemClickListener(position -> startActivity(new Intent(getApplicationContext(), ContactActivity.class)));
+        contactListAdapter.setOnItemClickListener(position -> {
+            Contact contact = contacts.get(position);
+            Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
+            intent.putExtra("id", contact.getId());
+            intent.putExtra("FirstName", contact.getFirstName());
+            intent.putExtra("LastName", contact.getLastName());
+            intent.putExtra("Email", contact.getEmail());
+            startActivity(intent);
+        });
     }
 
 

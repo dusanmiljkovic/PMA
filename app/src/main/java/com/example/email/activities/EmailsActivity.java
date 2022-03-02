@@ -47,7 +47,7 @@ public class EmailsActivity extends BaseActivity {
             Email email = emailList.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
             intent.putExtra("id", email.getId());
-            intent.putExtra("Stbject", email.getSubject());
+            intent.putExtra("Subject", email.getSubject());
             startActivity(intent);
         });
 
