@@ -10,11 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.email.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
@@ -25,6 +25,8 @@ public class ContactActivity extends BaseActivity {
     private TextInputEditText contactFirstName;
     private TextInputEditText contactLastName;
     private TextInputEditText contactEmail;
+    private MaterialButton bCancel;
+    private MaterialButton bSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,18 @@ public class ContactActivity extends BaseActivity {
         contactFirstName = findViewById(R.id.contact_first_name);
         contactLastName = findViewById(R.id.contact_last_name);
         contactEmail = findViewById(R.id.contact_email);
+        bCancel = findViewById(R.id.contact_cancel_button);
+        bSave = findViewById(R.id.contact_save_button);
+
+        bCancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                bCancel.setVisibility(View.INVISIBLE);
+                bSave.setVisibility(View.INVISIBLE);
+                contactFirstName.setEnabled(false);
+                contactLastName.setEnabled(false);
+                contactEmail.setEnabled(false);
+            }
+        });
 
         contactFirstName.setText(extras.getString("FirstName"), TextInputEditText.BufferType.EDITABLE);
         contactLastName.setText(extras.getString("LastName"), TextInputEditText.BufferType.EDITABLE);
@@ -67,6 +81,11 @@ public class ContactActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_edit_contact) {
+            bCancel.setVisibility(View.VISIBLE);
+            bSave.setVisibility(View.VISIBLE);
+            contactFirstName.setEnabled(true);
+            contactLastName.setEnabled(true);
+            contactEmail.setEnabled(true);
             Toast.makeText(getApplicationContext(), "Edit clicked", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
