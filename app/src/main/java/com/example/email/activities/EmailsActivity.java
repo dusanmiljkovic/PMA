@@ -1,15 +1,14 @@
 package com.example.email.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
@@ -46,8 +45,9 @@ public class EmailsActivity extends BaseActivity {
         emailListAdapter.setOnItemClickListener(position -> {
             Email email = emailList.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("id", email.getId());
+            intent.putExtra("From", email.getFrom());
             intent.putExtra("Subject", email.getSubject());
+            intent.putExtra("Content", email.getContent());
             startActivity(intent);
         });
 

@@ -1,9 +1,8 @@
 package com.example.email.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.email.R;
 
@@ -18,8 +17,9 @@ public class CreateFolderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_folder);
 
-        if(getSupportActionBar() != null)
+        if(getSupportActionBar() != null) {
             getSupportActionBar().hide();
+        }
         initToolbar();
         Objects.requireNonNull(getSupportActionBar()).setTitle("Create new folder");
     }
@@ -27,8 +27,9 @@ public class CreateFolderActivity extends BaseActivity {
     private void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setNavigationOnClickListener(view -> super.onBackPressed());
     }
 

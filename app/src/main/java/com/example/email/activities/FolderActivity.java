@@ -35,7 +35,9 @@ public class FolderActivity extends BaseActivity {
         setContentView(R.layout.activity_folder);
         initEmails();
 
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         initToolbar();
         Objects.requireNonNull(getSupportActionBar()).setTitle("Folder");
 
@@ -46,8 +48,9 @@ public class FolderActivity extends BaseActivity {
         emailListAdapter.setOnItemClickListener(position -> {
             Email email = emails.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("id", email.getId());
-            intent.putExtra("Stbject", email.getSubject());
+            intent.putExtra("From", email.getFrom());
+            intent.putExtra("Subject", email.getSubject());
+            intent.putExtra("Content", email.getContent());
             startActivity(intent);
         });
         recyclerView.setAdapter(emailListAdapter);
@@ -57,7 +60,9 @@ public class FolderActivity extends BaseActivity {
     private void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setNavigationOnClickListener(view -> super.onBackPressed());
     }
 
@@ -67,6 +72,11 @@ public class FolderActivity extends BaseActivity {
         emails.add(new Email((long) 3, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
         emails.add(new Email((long) 4, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
         emails.add(new Email((long) 5, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
+        emails.add(new Email((long) 6, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
+        emails.add(new Email((long) 7, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
+        emails.add(new Email((long) 8, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
+        emails.add(new Email((long) 9, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
+        emails.add(new Email((long) 10, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
     }
 
     @Override

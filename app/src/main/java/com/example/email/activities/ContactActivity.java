@@ -1,9 +1,5 @@
 package com.example.email.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.email.R;
 import com.google.android.material.button.MaterialButton;
@@ -66,7 +64,9 @@ public class ContactActivity extends BaseActivity {
     private void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setNavigationOnClickListener(view -> super.onBackPressed());
     }
 
@@ -86,7 +86,7 @@ public class ContactActivity extends BaseActivity {
             contactFirstName.setEnabled(true);
             contactLastName.setEnabled(true);
             contactEmail.setEnabled(true);
-            Toast.makeText(getApplicationContext(), "Edit clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Edit clicked", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

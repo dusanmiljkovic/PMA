@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
-import com.example.email.adapters.EmailListAdapter;
 import com.example.email.adapters.FolderListAdapter;
 import com.example.email.models.Folder;
 

@@ -1,15 +1,15 @@
 package com.example.email.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.email.R;
 
@@ -17,24 +17,44 @@ import java.util.Objects;
 
 public class EmailActivity extends BaseActivity {
 
+    private Bundle extras;
+
     private Toolbar toolbar;
+    private TextView tEmailFrom;
+    private TextView tEmailSubject;
+    private TextView tEmailContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
+        extras = getIntent().getExtras();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
         initToolbar();
         Objects.requireNonNull(getSupportActionBar()).setTitle("Email");
+
+        initContent();
+    }
+
+    private void initContent() {
+        tEmailFrom = findViewById(R.id.email_from);
+        tEmailSubject = findViewById(R.id.email_subject);
+        tEmailContent = findViewById(R.id.email_content);
+
+        tEmailFrom.setText(extras.getString("From"));
+        tEmailSubject.setText(extras.getString("Subject"));
+        tEmailContent.setText(extras.getString("Content"));
     }
 
     private void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setNavigationOnClickListener(view -> super.onBackPressed());
     }
 
