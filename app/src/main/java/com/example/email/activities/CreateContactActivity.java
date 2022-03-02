@@ -9,19 +9,19 @@ import com.example.email.R;
 
 import java.util.Objects;
 
-public class CreateFolderActivity extends BaseActivity {
+public class CreateContactActivity extends BaseActivity {
 
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_folder);
+        setContentView(R.layout.activity_create_contact);
 
-        if(getSupportActionBar() != null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().hide();
         initToolbar();
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Create new folder");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Create new contact");
     }
 
     private void initToolbar() {
@@ -31,5 +31,4 @@ public class CreateFolderActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> super.onBackPressed());
     }
-
 }

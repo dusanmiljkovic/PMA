@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Email.NoActionBar">
         <activity
+            android:name=".activities.ContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CreateContactActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.CreateFolderActivity"
             android:exported="false" />
         <activity

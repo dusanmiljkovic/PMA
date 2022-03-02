@@ -55,4 +55,10 @@
     <string name="create_email_cancel_button">Cancel</string>
     <string name="folders_menu_create_new_folder">Create new folder</string>
     <string name="folder_menu_edit_folder">Edit folder</string>
+    <string name="profile_menu_logout">Logout</string>
+    <string name="new_folder_type_in_the_name">Type the name...</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="save_button">Save</string>
+    <string name="contacts_menu_create_new_contact">Create new contact</string>
+    <string name="contact_menu_edit_contact">Edit contact</string>
 </resources>
