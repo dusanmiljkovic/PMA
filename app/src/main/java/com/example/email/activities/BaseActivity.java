@@ -2,6 +2,7 @@ package com.example.email.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -140,10 +141,19 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
                 })
                 .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    removeLoginCredentials();
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                 })
                 .show();
     }
 
+    private void removeLoginCredentials(){
+        SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences.Editor Ed=sp.edit();
+        Ed.putString("Username", null);
+        Ed.putString("Password", null);
+        Ed.putBoolean("AlreadyLogged", false);
+        Ed.apply();
+    }
 }

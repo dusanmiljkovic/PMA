@@ -3,6 +3,7 @@ package com.example.email.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout textInputUsername, textInputPassword;
+    private String username, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +28,31 @@ public class LoginActivity extends AppCompatActivity {
         MaterialButton buttonLogin = findViewById(R.id.login_button);
 
         buttonLogin.setOnClickListener(view -> {
-            if (!Objects.requireNonNull(textInputUsername.getEditText()).getText().toString().isEmpty() && !Objects.requireNonNull(textInputPassword.getEditText()).getText().toString().isEmpty()) {
+            username = Objects.requireNonNull(textInputUsername.getEditText()).getText().toString();
+            password = Objects.requireNonNull(textInputPassword.getEditText()).getText().toString();
+            if (!username.isEmpty() && !password.isEmpty()) {
                 Intent intent = new Intent(getApplicationContext(), EmailsActivity.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Welcome back " + textInputUsername.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
+                //TODO: add login functionality
+                if (true) {
+                    saveLoginCredentials();
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "Welcome back " + textInputUsername.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Bad credentials!", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(getApplicationContext(), "Bad credentials!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Username and password are required!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void saveLoginCredentials(){
+        SharedPreferences sp=getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences.Editor Ed=sp.edit();
+        Ed.putString("Username", username);
+        Ed.putString("Password", password);
+        Ed.putBoolean("AlreadyLogged", true);
+        Ed.apply();
     }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
@@ -64,7 +65,13 @@ public class SplashActivity extends AppCompatActivity {
     private void startLoginActivity() {
         new Handler().postDelayed(() -> {
             if (InternetUtil.hasInternetConnection(getApplicationContext())) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                SharedPreferences sp1 = this.getSharedPreferences("Login", MODE_PRIVATE);
+                boolean alreadyLogged = sp1.getBoolean("AlreadyLogged", false);
+                Intent intent;
+                if (alreadyLogged)
+                    intent = new Intent(getApplicationContext(), EmailsActivity.class);
+                else
+                    intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(getApplicationContext(), "There is no internet connection!", Toast.LENGTH_LONG).show();
