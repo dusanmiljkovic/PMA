@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (true) {
                     saveLoginCredentials();
                     startActivity(intent);
+                    finish();
                     Toast.makeText(getApplicationContext(), "Welcome back " + textInputUsername.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                 }
                 else {

@@ -73,6 +73,7 @@ public class SplashActivity extends AppCompatActivity {
                 else
                     intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(getApplicationContext(), "There is no internet connection!", Toast.LENGTH_LONG).show();
             }
