@@ -153,7 +153,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences.Editor Ed=sp.edit();
         Ed.putString("Username", null);
         Ed.putString("Password", null);
-        Ed.putBoolean("AlreadyLogged", false);
         Ed.apply();
     }
 }

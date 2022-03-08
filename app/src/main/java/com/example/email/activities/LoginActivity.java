@@ -1,11 +1,11 @@
 package com.example.email.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.email.R;
 import com.google.android.material.button.MaterialButton;
@@ -49,11 +49,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveLoginCredentials(){
-        SharedPreferences sp=getSharedPreferences("Login", MODE_PRIVATE);
-        SharedPreferences.Editor Ed=sp.edit();
+        SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences.Editor Ed = sp.edit();
         Ed.putString("Username", username);
         Ed.putString("Password", password);
-        Ed.putBoolean("AlreadyLogged", true);
         Ed.apply();
     }
 }

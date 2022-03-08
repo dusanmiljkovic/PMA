@@ -66,9 +66,9 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (InternetUtil.hasInternetConnection(getApplicationContext())) {
                 SharedPreferences sp1 = this.getSharedPreferences("Login", MODE_PRIVATE);
-                boolean alreadyLogged = sp1.getBoolean("AlreadyLogged", false);
+                String alreadyLogged = sp1.getString("Username", null);
                 Intent intent;
-                if (alreadyLogged)
+                if (alreadyLogged != null)
                     intent = new Intent(getApplicationContext(), EmailsActivity.class);
                 else
                     intent = new Intent(getApplicationContext(), LoginActivity.class);
