@@ -71,7 +71,7 @@ public class FolderActivity extends BaseActivity {
     }
 
     private void initEmails() {
-        messages = db.folderDao().getFolderWithMessages(extras.getInt("FolderId")).messages;
+        messages = db.messageDao().loadAllByFolderId(extras.getInt("FolderId"));
     }
 
     @Override

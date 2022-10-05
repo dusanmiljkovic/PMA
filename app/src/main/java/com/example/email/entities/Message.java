@@ -7,6 +7,9 @@ import androidx.room.TypeConverters;
 
 import com.example.email.entities.converters.DateConverter;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -41,5 +44,9 @@ public class Message {
 
     public void setReceivedDate(Date receivedDate) {
         this.receivedDate = receivedDate;
+    }
+
+    public String getReceivedDateString() {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(receivedDate.getTime()), ZoneId.systemDefault()).toString();
     }
 }

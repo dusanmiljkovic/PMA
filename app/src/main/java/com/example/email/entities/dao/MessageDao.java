@@ -12,11 +12,14 @@ import java.util.List;
 
 @Dao
 public interface MessageDao {
-    @Query("SELECT * FROM message")
+    @Query("SELECT * FROM message ORDER BY received_date DESC")
     List<Message> getAll();
 
     @Query("SELECT * FROM message WHERE id IN (:messageIds)")
     List<Message> loadAllByIds(int[] messageIds);
+
+    @Query("SELECT * FROM message WHERE folderId = (:folderId) ORDER BY received_date DESC")
+    List<Message> loadAllByFolderId(int folderId);
 
     @Query("SELECT * FROM message WHERE message_number = :messageNumber")
     Message findByMessageNumber(int messageNumber);

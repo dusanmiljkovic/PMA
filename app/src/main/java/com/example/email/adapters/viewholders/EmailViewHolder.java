@@ -19,7 +19,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     private final TextView sender;
     private final TextView subject;
     private final TextView content;
-    private TextClock dateTime;
+    private final TextView dateTime;
 
     public EmailViewHolder(@NonNull View itemView, EmailListAdapter.OnItemClickListener onItemClickListener) {
         super(itemView);
@@ -44,7 +44,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         sender.setText(message.from);
         subject.setText(message.subject);
         content.setText(message.content);
-//        dateTime
+        dateTime.setText(message.getReceivedDateString());
     }
 
 }

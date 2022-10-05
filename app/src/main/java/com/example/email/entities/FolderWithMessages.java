@@ -12,5 +12,6 @@ public class FolderWithMessages {
             parentColumn = "id",
             entityColumn = "folderId"
     )
+
     public List<Message> messages;
 }
