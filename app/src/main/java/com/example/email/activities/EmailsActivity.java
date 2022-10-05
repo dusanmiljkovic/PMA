@@ -9,20 +9,25 @@ import android.view.MenuItem;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.models.Email;
+import com.example.email.services.MailWorker;
 import com.example.email.utils.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -55,6 +60,28 @@ public class EmailsActivity extends BaseActivity {
         emailListAdapter = new EmailListAdapter(emailList);
 
         recyclerView.setAdapter(emailListAdapter);
+
+        Constraints constraint = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(true)
+                .build();
+
+        PeriodicWorkRequest uploadWorkRequest = new PeriodicWorkRequest.Builder(
+                MailWorker.class,
+                2,
+                TimeUnit.MINUTES
+        )
+                .setConstraints(constraint)
+                .addTag("my_unique_worker")
+                .build();
+
+        WorkManager
+                .getInstance(EmailsActivity.this)
+                .enqueue(uploadWorkRequest);
+
+
+
+
         emailListAdapter.setOnItemClickListener(position -> {
             Email email = emailList.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
@@ -105,6 +132,7 @@ public class EmailsActivity extends BaseActivity {
         Lock lock = new ReentrantLock();
         Condition condition = lock.newCondition();
 
+        ClassLoader tcl = Thread.currentThread().getContextClassLoader();
         //Nit za ucitavanje email-ova preko interneta
         Thread thread1 = new Thread()
         {
@@ -112,6 +140,7 @@ public class EmailsActivity extends BaseActivity {
             public void run()
             {
                 try {
+                    Thread.currentThread().setContextClassLoader(javax.mail.Session.class.getClassLoader());
                     Folder inbox;
 
                     lock.lock();
@@ -144,6 +173,7 @@ public class EmailsActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 finally {
+                    Thread.currentThread().setContextClassLoader(tcl);
                     lock.unlock();
                 }
             }
