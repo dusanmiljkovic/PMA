@@ -6,8 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Folder;
 import com.example.email.utils.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -17,11 +21,14 @@ import javax.mail.Store;
 public class MailWorker extends Worker {
     private final Properties properties = System.getProperties();
     private final Session imapSession = Session.getInstance(properties);
+    private MailDatabase db;
 
     public MailWorker(
             @NonNull Context context,
             @NonNull WorkerParameters params) {
         super(context, params);
+
+        db = MailDatabase.getDbInstance(context);
         initialise();
     }
 
@@ -46,12 +53,15 @@ public class MailWorker extends Worker {
             Store store = session.getStore("imaps");
             store.connect("imap.gmail.com", Constants.EMAIL, Constants.PASSWORD);
             javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
-            long i = 1;
             for (javax.mail.Folder folder : emailFolders) {
-                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
-//                    folders.add(new Folder(i, folder.getFullName(), folder.getMessageCount()));
-                    i++;
-                }
+
+                Folder folderToAdd = new Folder();
+                folderToAdd.name = folder.getName();
+                folderToAdd.fullName = folder.getFullName();
+
+                if (db.folderDao().findByFullName(folderToAdd.fullName) == null)
+                    db.folderDao().insertAll(folderToAdd);
+//
             }
             System.out.println("\n\nDONE\n\n");
 
