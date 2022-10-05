@@ -29,19 +29,18 @@ public class MailWorker extends Worker {
             @NonNull WorkerParameters params) {
         super(context, params);
 
-        db = MailDatabase.getDbInstance(context);
-        initialise();
+        initialise(context);
     }
 
     @Override
     public Result doWork() {
-
         getFolders();
-
+        getEmails();
         return Result.success();
     }
 
-    private void initialise(){
+    private void initialise(Context context){
+        db = MailDatabase.getDbInstance(context);
         properties.put("mail.store.protocol", "imaps");
         properties.put("mail.imaps.port", "993");
         properties.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -55,44 +54,65 @@ public class MailWorker extends Worker {
             store.connect("imap.gmail.com", Constants.EMAIL, Constants.PASSWORD);
 
             javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
-
             for (javax.mail.Folder folder : emailFolders) {
-                Folder folderToAdd = new Folder();
-                folderToAdd.name = folder.getName();
-                folderToAdd.fullName = folder.getFullName();
+                String folderName = folder.getName();
 
-                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0)
-                    if (db.folderDao().findByName(folderToAdd.name) == null)
+                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
+                    if (db.folderDao().findByName(folderName) == null) {
+                        Folder folderToAdd = new Folder();
+                        folderToAdd.name = folderName;
+                        folderToAdd.fullName = folder.getFullName();
                         db.folderDao().insertAll(folderToAdd);
-
-                    folder.open(javax.mail.Folder.READ_ONLY);
-                    javax.mail.Message[] emailMessages = folder.getMessages();
-                    for (javax.mail.Message msg : emailMessages){
-                        try {
-                            int folderFromDb = db.folderDao().findByName(folderToAdd.name).id;
-                            Message message = new Message();
-                            message.messageNumber = msg.getMessageNumber();
-                            message.setReceivedDate(msg.getReceivedDate());
-                            message.subject = msg.getSubject();
-                            message.content = msg.getContent().toString();
-                            message.from = Arrays.toString(msg.getFrom());
-                            message.to = Arrays.toString(msg.getAllRecipients());
-                            message.folderId = folderFromDb;
-
-                            if (db.messageDao().findByMessageNumber(message.messageNumber) == null)
-                                db.messageDao().insertAll(message);
-
-                        }catch (IOException e) {
-                            System.out.println("An error occurred while getting message.");
-                            e.printStackTrace();
-                        }
                     }
-
-
+                }
             }
         }
         catch (MessagingException e) {
             System.out.println("An error occurred while getting folders.");
+            e.printStackTrace();
+        }
+    }
+
+    public void getEmails(){
+        try {
+            Session session = Session.getDefaultInstance(properties, null);
+            Store store = session.getStore("imaps");
+            store.connect("imap.gmail.com", Constants.EMAIL, Constants.PASSWORD);
+
+            javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
+
+            for (javax.mail.Folder folder : emailFolders) {
+                String folderName = folder.getName();
+
+                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
+                    folder.open(javax.mail.Folder.READ_ONLY);
+                    javax.mail.Message[] emailMessages = folder.getMessages();
+                    for (javax.mail.Message msg : emailMessages) {
+                        try {
+                            if (db.messageDao().findByMessageNumber(msg.getMessageNumber()) == null) {
+                                int folderFromDb = db.folderDao().findByName(folderName).id;
+                                Message message = new Message();
+                                message.messageNumber = msg.getMessageNumber();
+                                message.setReceivedDate(msg.getReceivedDate());
+                                message.subject = msg.getSubject();
+                                message.content = msg.getContent().toString();
+                                message.from = Arrays.toString(msg.getFrom());
+                                message.to = Arrays.toString(msg.getAllRecipients());
+                                message.folderId = folderFromDb;
+                                db.messageDao().insertAll(message);
+                            }
+
+                        } catch (IOException e) {
+                            System.out.println("An error occurred while getting message.");
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (MessagingException e) {
+            System.out.println("An error occurred while getting messages.");
             e.printStackTrace();
         }
     }

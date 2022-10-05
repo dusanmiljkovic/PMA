@@ -15,6 +15,7 @@ import com.example.email.R;
 import com.example.email.adapters.FolderListAdapter;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Folder;
+import com.example.email.entities.FolderWithMessages;
 import com.example.email.entities.Message;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class FoldersActivity extends BaseActivity {
     private MailDatabase db;
     private RecyclerView recyclerView;
     private FolderListAdapter folderListAdapter;
-    private List<Folder> folders = new ArrayList<>();
+    private List<FolderWithMessages> folders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +46,15 @@ public class FoldersActivity extends BaseActivity {
         recyclerView.setAdapter(folderListAdapter);
 
         folderListAdapter.setOnItemClickListener(position -> {
-            Folder folder = folders.get(position);
-
+            FolderWithMessages folderWithMessages = folders.get(position);
             Intent intent = new Intent(getApplicationContext(), FolderActivity.class);
-            intent.putExtra("FolderId", folder.id);
+            intent.putExtra("FolderId", folderWithMessages.folder.id);
             startActivity(intent);
         });
     }
 
     private void initFolders() {
-        folders = db.folderDao().getAll();
+        folders = db.folderDao().getFoldersWithMessages();
     }
 
     @Override

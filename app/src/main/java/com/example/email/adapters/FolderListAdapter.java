@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.email.R;
 import com.example.email.adapters.viewholders.FolderImageView;
 import com.example.email.entities.Folder;
+import com.example.email.entities.FolderWithMessages;
 
 import java.util.List;
 
 public class FolderListAdapter extends RecyclerView.Adapter<FolderImageView> {
 
-    private final List<Folder> folderList;
+    private final List<FolderWithMessages> folderWithMessagesList;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -26,8 +27,8 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderImageView> {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public FolderListAdapter(List<Folder> folderList) {
-        this.folderList = folderList;
+    public FolderListAdapter(List<FolderWithMessages> folderWithMessagesList) {
+        this.folderWithMessagesList = folderWithMessagesList;
     }
 
     @NonNull
@@ -39,13 +40,13 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderImageView> {
 
     @Override
     public void onBindViewHolder(@NonNull FolderImageView holder, int position) {
-        Folder folder = folderList.get(position);
+        FolderWithMessages folder = folderWithMessagesList.get(position);
         holder.bind(folder);
     }
 
     @Override
     public int getItemCount() {
-        return folderList.size();
+        return folderWithMessagesList.size();
     }
 
 }
