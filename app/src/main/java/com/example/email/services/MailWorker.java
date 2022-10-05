@@ -10,8 +10,6 @@ import com.example.email.database.MailDatabase;
 import com.example.email.entities.Folder;
 import com.example.email.utils.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -58,10 +56,10 @@ public class MailWorker extends Worker {
                 Folder folderToAdd = new Folder();
                 folderToAdd.name = folder.getName();
                 folderToAdd.fullName = folder.getFullName();
+                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0)
+                    if (db.folderDao().findByName(folderToAdd.name) == null)
+                        db.folderDao().insertAll(folderToAdd);
 
-                if (db.folderDao().findByFullName(folderToAdd.fullName) == null)
-                    db.folderDao().insertAll(folderToAdd);
-//
             }
             System.out.println("\n\nDONE\n\n");
 

@@ -14,7 +14,7 @@ public interface FolderDao {
     @Query("SELECT * FROM folder")
     List<Folder> getAll();
 
-    @Query("SELECT * FROM folder WHERE uid IN (:folderIds)")
+    @Query("SELECT * FROM folder WHERE id IN (:folderIds)")
     List<Folder> loadAllByIds(int[] folderIds);
 
     @Query("SELECT * FROM folder WHERE name LIKE :name LIMIT 1")

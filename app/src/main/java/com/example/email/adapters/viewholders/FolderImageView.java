@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.FolderListAdapter;
-import com.example.email.models.Folder;
+import com.example.email.entities.Folder;
 
 public class FolderImageView extends RecyclerView.ViewHolder {
 
@@ -31,8 +31,8 @@ public class FolderImageView extends RecyclerView.ViewHolder {
     }
 
     public void bind(Folder folder) {
-        title.setText(folder.getName());
-        messagesSum.setText(String.valueOf(folder.getMessages()));
+        title.setText(folder.name);
+        messagesSum.setText(String.valueOf(1));
     }
 
 }
