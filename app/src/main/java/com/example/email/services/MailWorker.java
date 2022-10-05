@@ -8,8 +8,11 @@ import androidx.work.WorkerParameters;
 
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Folder;
+import com.example.email.entities.Message;
 import com.example.email.utils.Constants;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -50,22 +53,46 @@ public class MailWorker extends Worker {
             Session session = Session.getDefaultInstance(properties, null);
             Store store = session.getStore("imaps");
             store.connect("imap.gmail.com", Constants.EMAIL, Constants.PASSWORD);
-            javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
-            for (javax.mail.Folder folder : emailFolders) {
 
+            javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
+
+            for (javax.mail.Folder folder : emailFolders) {
                 Folder folderToAdd = new Folder();
                 folderToAdd.name = folder.getName();
                 folderToAdd.fullName = folder.getFullName();
+
                 if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0)
                     if (db.folderDao().findByName(folderToAdd.name) == null)
                         db.folderDao().insertAll(folderToAdd);
 
-            }
-            System.out.println("\n\nDONE\n\n");
+                    folder.open(javax.mail.Folder.READ_ONLY);
+                    javax.mail.Message[] emailMessages = folder.getMessages();
+                    for (javax.mail.Message msg : emailMessages){
+                        try {
+                            int folderFromDb = db.folderDao().findByName(folderToAdd.name).id;
+                            Message message = new Message();
+                            message.messageNumber = msg.getMessageNumber();
+                            message.setReceivedDate(msg.getReceivedDate());
+                            message.subject = msg.getSubject();
+                            message.content = msg.getContent().toString();
+                            message.from = Arrays.toString(msg.getFrom());
+                            message.to = Arrays.toString(msg.getAllRecipients());
+                            message.folderId = folderFromDb;
 
+                            if (db.messageDao().findByMessageNumber(message.messageNumber) == null)
+                                db.messageDao().insertAll(message);
+
+                        }catch (IOException e) {
+                            System.out.println("An error occurred while getting message.");
+                            e.printStackTrace();
+                        }
+                    }
+
+
+            }
         }
         catch (MessagingException e) {
-            System.out.println("\n\nAn error occurred while getting folders.\n\n");
+            System.out.println("An error occurred while getting folders.");
             e.printStackTrace();
         }
     }

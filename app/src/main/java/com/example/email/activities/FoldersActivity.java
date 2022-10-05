@@ -15,6 +15,7 @@ import com.example.email.R;
 import com.example.email.adapters.FolderListAdapter;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Folder;
+import com.example.email.entities.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,10 @@ public class FoldersActivity extends BaseActivity {
         recyclerView.setAdapter(folderListAdapter);
 
         folderListAdapter.setOnItemClickListener(position -> {
+            Folder folder = folders.get(position);
+
             Intent intent = new Intent(getApplicationContext(), FolderActivity.class);
+            intent.putExtra("FolderId", folder.id);
             startActivity(intent);
         });
     }

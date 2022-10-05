@@ -4,8 +4,10 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import com.example.email.entities.Folder;
+import com.example.email.entities.FolderWithMessages;
 
 import java.util.List;
 
@@ -28,4 +30,12 @@ public interface FolderDao {
 
     @Delete
     void delete(Folder folder);
+
+    @Transaction
+    @Query("SELECT * FROM folder")
+    public List<FolderWithMessages> getFoldersWithMessages();
+
+    @Transaction
+    @Query("SELECT * FROM folder WHERE id = (:folderId)")
+    public FolderWithMessages getFolderWithMessages(int folderId);
 }

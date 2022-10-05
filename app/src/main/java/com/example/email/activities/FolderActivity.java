@@ -15,24 +15,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
-import com.example.email.models.Email;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Message;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class FolderActivity extends BaseActivity {
-
+    private MailDatabase db;
+    private Bundle extras;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private EmailListAdapter emailListAdapter;
-    private List<Email> emails = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder);
+        extras = getIntent().getExtras();
+
+        db = MailDatabase.getDbInstance(FolderActivity.this);
         initEmails();
 
         if (getSupportActionBar() != null) {
@@ -44,13 +48,13 @@ public class FolderActivity extends BaseActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        emailListAdapter = new EmailListAdapter(emails);
+        emailListAdapter = new EmailListAdapter(messages);
         emailListAdapter.setOnItemClickListener(position -> {
-            Email email = emails.get(position);
+            Message message = messages.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("From", email.getFrom());
-            intent.putExtra("Subject", email.getSubject());
-            intent.putExtra("Content", email.getContent());
+            intent.putExtra("From", message.from);
+            intent.putExtra("Subject", message.subject);
+            intent.putExtra("Content", message.content);
             startActivity(intent);
         });
         recyclerView.setAdapter(emailListAdapter);
@@ -67,16 +71,7 @@ public class FolderActivity extends BaseActivity {
     }
 
     private void initEmails() {
-        emails.add(new Email((long) 1, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 2, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 3, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 4, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 5, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 6, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 7, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 8, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 9, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
-        emails.add(new Email((long) 10, "John Doe", "Dusan", new Date(), "Android", "This is a short description"));
+        messages = db.folderDao().getFolderWithMessages(extras.getInt("FolderId")).messages;
     }
 
     @Override

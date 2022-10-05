@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
+import com.example.email.entities.Message;
 import com.example.email.models.Email;
 
 public class EmailViewHolder extends RecyclerView.ViewHolder {
@@ -38,11 +39,11 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(Email email) {
+    public void bind(Message message) {
         senderImage.setBackgroundResource(R.mipmap.ic_launcher);
-        sender.setText(email.getFrom());
-        subject.setText(email.getSubject());
-        content.setText(email.getContent());
+        sender.setText(message.from);
+        subject.setText(message.subject);
+        content.setText(message.content);
 //        dateTime
     }
 
