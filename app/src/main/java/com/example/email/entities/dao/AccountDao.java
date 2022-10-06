@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.example.email.entities.Account;
+import com.example.email.entities.AccountWithContacts;
 import com.example.email.entities.AccountWithMessages;
 
 import java.util.List;
@@ -39,4 +40,8 @@ public interface AccountDao {
     @Transaction
     @Query("SELECT * FROM account WHERE id = :accountId LIMIT 1")
     public AccountWithMessages getAccountWithMessages(int accountId);
+
+    @Transaction
+    @Query("SELECT * FROM account WHERE id = :accountId LIMIT 1")
+    public AccountWithContacts getAccountWithContacts(int accountId);
 }

@@ -20,4 +20,6 @@ public class Contact {
 
     @ColumnInfo(name = "email")
     private String email;
+
+    private String accountId;
 }
