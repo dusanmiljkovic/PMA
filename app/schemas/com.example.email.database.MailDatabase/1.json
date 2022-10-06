@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cc86c5669edece6e6443d767a4bcaa72",
+    "identityHash": "08b2beffb97ba68676d4511c577f57a2",
     "entities": [
       {
         "tableName": "Folder",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "Message",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `message_number` INTEGER NOT NULL, `received_date` INTEGER, `subject` TEXT, `content` TEXT, `from` TEXT, `to` TEXT, `folderId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `message_number` INTEGER NOT NULL, `received_date` INTEGER, `subject` TEXT, `content` TEXT, `from` TEXT, `to` TEXT, `folderId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -87,6 +87,56 @@
             "columnName": "folderId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Account",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `smtp` TEXT, `pop_imap` TEXT, `username` TEXT, `password` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "smtp",
+            "columnName": "smtp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "popImap",
+            "columnName": "pop_imap",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -102,7 +152,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc86c5669edece6e6443d767a4bcaa72')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08b2beffb97ba68676d4511c577f57a2')"
     ]
   }
 }

@@ -31,6 +31,9 @@ public interface FolderDao {
     @Delete
     void delete(Folder folder);
 
+    @Query("DELETE FROM folder WHERE id IN (:folderIds)")
+    Void deleteAllByIds(int[] folderIds);
+
     @Transaction
     @Query("SELECT * FROM folder")
     public List<FolderWithMessages> getFoldersWithMessages();

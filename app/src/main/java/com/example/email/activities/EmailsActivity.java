@@ -18,7 +18,6 @@ import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Message;
-import com.example.email.models.Email;
 import com.example.email.services.MailWorker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

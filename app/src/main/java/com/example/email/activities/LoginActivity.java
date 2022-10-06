@@ -8,13 +8,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.email.R;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Account;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-
+    private MailDatabase db;
     private TextInputLayout textInputUsername, textInputPassword;
     private String username, password;
 
@@ -22,6 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        db = MailDatabase.getDbInstance(LoginActivity.this);
 
         textInputUsername = findViewById(R.id.login_username);
         textInputPassword = findViewById(R.id.login_password);
@@ -54,5 +58,9 @@ public class LoginActivity extends AppCompatActivity {
         Ed.putString("Username", username);
         Ed.putString("Password", password);
         Ed.apply();
+        Account account = new Account();
+        account.username = username;
+        account.password = password;
+        db.accountDao().insertAll(account);
     }
 }

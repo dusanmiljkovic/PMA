@@ -38,6 +38,8 @@ public class Message {
 
     public int folderId;
 
+    public int accountId;
+
     public Date getReceivedDate() {
         return receivedDate;
     }

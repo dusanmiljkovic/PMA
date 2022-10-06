@@ -2,7 +2,6 @@ package com.example.email.adapters.viewholders;
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.entities.Message;
-import com.example.email.models.Email;
 
 public class EmailViewHolder extends RecyclerView.ViewHolder {
 

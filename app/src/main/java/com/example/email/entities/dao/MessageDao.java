@@ -32,4 +32,7 @@ public interface MessageDao {
 
     @Delete
     void delete(Message folder);
+
+    @Query("DELETE FROM message WHERE accountId = :accountId")
+    void deleteAllByAccountId(int accountId);
 }
