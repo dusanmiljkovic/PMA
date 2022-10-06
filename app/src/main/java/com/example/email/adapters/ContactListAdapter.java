@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.viewholders.ContactViewHolder;
-import com.example.email.models.Contact;
+import com.example.email.entities.Contact;
 
 import java.util.List;
 

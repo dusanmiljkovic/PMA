@@ -10,16 +10,19 @@ public class Contact {
     public int id;
 
     @ColumnInfo(name = "first_name")
-    private String firstName;
+    public String firstName;
 
     @ColumnInfo(name = "last_name")
-    private String lastName;
+    public String lastName;
 
     @ColumnInfo(name = "display_name")
-    private String displayName;
+    public String displayName;
 
     @ColumnInfo(name = "email")
-    private String email;
+    public String email;
 
-    private String accountId;
+    @ColumnInfo(name = "show")
+    public Boolean show;
+
+    public int accountId;
 }

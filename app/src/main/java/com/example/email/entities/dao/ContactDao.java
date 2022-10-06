@@ -11,7 +11,7 @@ import java.util.List;
 
 @Dao
 public interface ContactDao {
-    @Query("SELECT * FROM contact ORDER BY display_name ASC")
+    @Query("SELECT * FROM contact WHERE show = 1 ORDER BY display_name ASC")
     List<Contact> getAll();
 
     @Query("SELECT * FROM contact WHERE id IN (:contactIds)")
@@ -19,6 +19,9 @@ public interface ContactDao {
 
     @Query("SELECT * FROM contact WHERE id = :id LIMIT 1")
     Contact findById(int id);
+
+    @Query("SELECT * FROM contact WHERE email = :email LIMIT 1")
+    Contact findByEmail(String email);
 
     @Insert
     void insertAll(Contact... contacts);

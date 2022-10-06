@@ -4,9 +4,11 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
+import com.example.email.entities.MessageToContacts;
 
 import java.util.List;
 
@@ -35,4 +37,16 @@ public interface MessageDao {
 
     @Query("DELETE FROM message WHERE accountId = :accountId")
     void deleteAllByAccountId(int accountId);
+
+//    @Transaction
+//    @Query("SELECT * FROM message")
+//    public List<MessageToContacts> getMessagesWithContacts();
+//
+//    @Transaction
+//    @Query("SELECT * FROM message where id = :messageId")
+//    public List<MessageToContacts> getMessageWithContacts(int messageId);
+//
+//    @Transaction
+//    @Query("SELECT * FROM message where message_number = :messageNumber")
+//    public List<MessageToContacts> getMessageWithContactsByMessageNumber(int messageNumber);
 }

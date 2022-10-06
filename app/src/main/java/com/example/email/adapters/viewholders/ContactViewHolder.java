@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.ContactListAdapter;
-import com.example.email.models.Contact;
+import com.example.email.entities.Contact;
 
 public class ContactViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,7 +33,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Contact contact) {
         icon.setImageResource(R.mipmap.ic_launcher);
-        name.setText(String.format("%s %s", contact.getFirstName(), contact.getLastName()));
+        name.setText(contact.displayName);
     }
 
 }

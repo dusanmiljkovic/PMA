@@ -56,7 +56,7 @@ public class EmailsActivity extends BaseActivity {
 
         PeriodicWorkRequest uploadWorkRequest = new PeriodicWorkRequest.Builder(
                 MailWorker.class,
-                2,
+                30,
                 TimeUnit.MINUTES
         )
                 .setConstraints(constraint)
@@ -71,7 +71,7 @@ public class EmailsActivity extends BaseActivity {
         emailListAdapter.setOnItemClickListener(position -> {
             Message message = messagesList.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("From", message.from);
+            intent.putExtra("From", message.from.substring(1).split(" <")[0]);
             intent.putExtra("Subject", message.subject);
             intent.putExtra("Content", message.content);
             startActivity(intent);
