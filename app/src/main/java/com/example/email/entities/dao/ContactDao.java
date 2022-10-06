@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.email.entities.Contact;
 
@@ -22,6 +23,9 @@ public interface ContactDao {
 
     @Query("SELECT * FROM contact WHERE email = :email LIMIT 1")
     Contact findByEmail(String email);
+
+    @Update
+    Integer updateContact(Contact contact);
 
     @Insert
     void insertAll(Contact... contacts);

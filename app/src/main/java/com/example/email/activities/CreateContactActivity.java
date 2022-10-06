@@ -72,14 +72,14 @@ public class CreateContactActivity extends BaseActivity {
     private void saveContact(){
         Contact contact = new Contact();
         contact.show = true;
-        contact.email = email.getText().toString().trim();
         contact.firstName = firstName.getText().toString().trim();
         contact.lastName = lastName.getText().toString().trim();
         contact.displayName = contact.firstName + " " + contact.lastName;
         if (contact.displayName.trim().length() == 0){
-            contact.displayName = email.toString();
+            contact.displayName = email.getText().toString().trim();
         }
-        if (email.getText().toString().trim().length() == 0){
+        contact.email = email.getText().toString().trim();
+        if (contact.email.length() == 0){
             Toast.makeText(getApplicationContext(), "Email must not be empty!", Toast.LENGTH_SHORT).show();
         }
         db.contactDao().insertAll(contact);
