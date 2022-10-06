@@ -2,7 +2,6 @@ package com.example.email.adapters.viewholders;
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
-import com.example.email.models.Email;
+import com.example.email.entities.Message;
 
 public class EmailViewHolder extends RecyclerView.ViewHolder {
 
@@ -18,7 +17,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
     private final TextView sender;
     private final TextView subject;
     private final TextView content;
-    private TextClock dateTime;
+    private final TextView dateTime;
 
     public EmailViewHolder(@NonNull View itemView, EmailListAdapter.OnItemClickListener onItemClickListener) {
         super(itemView);
@@ -38,12 +37,12 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(Email email) {
+    public void bind(Message message) {
         senderImage.setBackgroundResource(R.mipmap.ic_launcher);
-        sender.setText(email.getFrom());
-        subject.setText(email.getSubject());
-        content.setText(email.getContent());
-//        dateTime
+        sender.setText(message.from.substring(1).split(" <")[0]);
+        subject.setText(message.subject);
+        content.setText(message.content);
+        dateTime.setText(message.getReceivedDateString());
     }
 
 }

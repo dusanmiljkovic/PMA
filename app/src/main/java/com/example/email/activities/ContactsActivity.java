@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.ContactListAdapter;
-import com.example.email.models.Contact;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +22,16 @@ import java.util.Objects;
 
 public class ContactsActivity extends BaseActivity {
 
+    private MailDatabase db;
     private RecyclerView recyclerView;
     private ContactListAdapter contactListAdapter;
-    private final List<Contact> contacts = new ArrayList<>();
+    private List<Contact> contacts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        db = MailDatabase.getDbInstance(ContactsActivity.this);
         initContacts();
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu_title_contacts);
@@ -39,27 +42,21 @@ public class ContactsActivity extends BaseActivity {
 
         contactListAdapter = new ContactListAdapter(contacts);
         recyclerView.setAdapter(contactListAdapter);
-
         contactListAdapter.setOnItemClickListener(position -> {
             Contact contact = contacts.get(position);
             Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
-            intent.putExtra("id", contact.getId());
-            intent.putExtra("FirstName", contact.getFirstName());
-            intent.putExtra("LastName", contact.getLastName());
-            intent.putExtra("Email", contact.getEmail());
+            intent.putExtra("id", contact.id);
+            intent.putExtra("FirstName", contact.firstName);
+            intent.putExtra("LastName", contact.lastName);
+            intent.putExtra("Email", contact.email);
             startActivity(intent);
         });
     }
 
-
     private void initContacts() {
-        contacts.add(new Contact((long) 1, "Dusan", "Miljkovic", "dusan@gmail.com"));
-        contacts.add(new Contact((long) 2, "Marko", "Kljajic", "marko@gmail.com"));
-        contacts.add(new Contact((long) 3, "Jovan", "Milic", "jovan@gmail.com"));
-        contacts.add(new Contact((long) 4, "Nemanja", "Rodic", "nemanja@gmail.com"));
-        contacts.add(new Contact((long) 5, "Uros", "Krkic", "uros@gmail.com"));
-        contacts.add(new Contact((long) 6, "Milos", "Milosevic", "milos@gmail.com"));
+        contacts = db.contactDao().getAll();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

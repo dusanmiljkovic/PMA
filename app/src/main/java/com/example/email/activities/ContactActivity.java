@@ -7,11 +7,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.email.R;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Contact;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -25,11 +28,15 @@ public class ContactActivity extends BaseActivity {
     private TextInputEditText contactEmail;
     private MaterialButton bCancel;
     private MaterialButton bSave;
+    private int contactId;
+    private MailDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+
+        db = MailDatabase.getDbInstance(ContactActivity.this);
         final Bundle extras = getIntent().getExtras();
 
         Log.v("firstName", extras.getString("FirstName"));
@@ -50,9 +57,16 @@ public class ContactActivity extends BaseActivity {
             }
         });
 
+        bSave.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                updateContact();
+            }
+        });
+
         contactFirstName.setText(extras.getString("FirstName"), TextInputEditText.BufferType.EDITABLE);
         contactLastName.setText(extras.getString("LastName"), TextInputEditText.BufferType.EDITABLE);
         contactEmail.setText(extras.getString("Email"), TextInputEditText.BufferType.EDITABLE);
+        contactId = extras.getInt("id");
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -89,6 +103,22 @@ public class ContactActivity extends BaseActivity {
 //            Toast.makeText(getApplicationContext(), "Edit clicked", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateContact(){
+        Contact contact = db.contactDao().findById(contactId);
+        contact.firstName = contactFirstName.getText().toString();
+        contact.lastName = contactLastName.getText().toString().trim();
+        contact.displayName = contact.firstName + " " + contact.lastName;
+        if (contact.displayName.trim().length() == 0){
+            contact.displayName = contactEmail.getText().toString().trim();
+        }
+        contact.email = contactEmail.getText().toString().trim();
+        if (contact.email.length() == 0){
+            Toast.makeText(getApplicationContext(), "Email must not be empty!", Toast.LENGTH_SHORT).show();
+        }
+        db.contactDao().updateContact(contact);
+        finish();
     }
 
 }

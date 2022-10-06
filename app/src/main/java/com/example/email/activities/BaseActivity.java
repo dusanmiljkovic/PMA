@@ -15,8 +15,15 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.email.R;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Account;
+import com.example.email.entities.AccountWithMessages;
+import com.example.email.entities.Message;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +31,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+    private MailDatabase db;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
@@ -33,7 +40,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        db = MailDatabase.getDbInstance(BaseActivity.this);
     }
 
     @Override
@@ -151,8 +160,20 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private void removeLoginCredentials(){
         SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
         SharedPreferences.Editor Ed=sp.edit();
+        String username = sp.getString("Username", "");
         Ed.putString("Username", null);
         Ed.putString("Password", null);
         Ed.apply();
+        Account ac = db.accountDao().findByEmail(username);
+        if (ac != null){
+            List<Message> messagesToBeDeleted = db.accountDao().getAccountWithMessages(ac.id).messages;
+            List<Integer> folderIds = new ArrayList<>();
+            for (Message msg: messagesToBeDeleted) {
+                folderIds.add(msg.folderId);
+            }
+            db.folderDao().deleteAllByIds(folderIds.stream().mapToInt(i->i).toArray());
+            db.messageDao().deleteAllByAccountId(ac.id);
+            db.accountDao().delete(ac);
+        }
     }
 }

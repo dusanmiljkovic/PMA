@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
 import com.example.email.adapters.viewholders.EmailViewHolder;
-import com.example.email.models.Email;
+import com.example.email.entities.Message;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmailListAdapter extends RecyclerView.Adapter<EmailViewHolder> implements Filterable {
 
-    private final List<Email> emails;
-    private final List<Email> emailsFull;
+    private final List<Message> messages;
+    private final List<Message> messagesFull;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -30,9 +30,9 @@ public class EmailListAdapter extends RecyclerView.Adapter<EmailViewHolder> impl
         this.onItemClickListener = onItemClickListener;
     }
 
-    public EmailListAdapter(List<Email> emails) {
-        this.emails = emails;
-        emailsFull = new ArrayList<>(emails);
+    public EmailListAdapter(List<Message> messages) {
+        this.messages = messages;
+        messagesFull = new ArrayList<>(messages);
     }
 
     @NonNull
@@ -44,13 +44,13 @@ public class EmailListAdapter extends RecyclerView.Adapter<EmailViewHolder> impl
 
     @Override
     public void onBindViewHolder(@NonNull EmailViewHolder holder, int position) {
-        final Email email = emails.get(position);
+        final Message email = messages.get(position);
         holder.bind(email);
     }
 
     @Override
     public int getItemCount() {
-        return emails.size();
+        return messages.size();
     }
 
     @Override
@@ -61,22 +61,22 @@ public class EmailListAdapter extends RecyclerView.Adapter<EmailViewHolder> impl
     private final Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<Email> filterList = new ArrayList<>();
+            List<Message> filterList = new ArrayList<>();
 
             if (charSequence == null || charSequence.length() == 0) {
-                filterList.addAll(emailsFull);
+                filterList.addAll(messagesFull);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for (Email email : emailsFull) {
-                    if (email.getSubject().toLowerCase().contains(filterPattern)) {
-                        filterList.add(email);
-                    } else if (email.getContent().toLowerCase().contains(filterPattern)) {
-                        filterList.add(email);
-                    } else if (email.getTo().toLowerCase().contains(filterPattern)) {
-                        filterList.add(email);
-                    } else if (email.getFrom().toLowerCase().contains(filterPattern)) {
-                        filterList.add(email);
+                for (Message message : messagesFull) {
+                    if (message.subject.toLowerCase().contains(filterPattern)) {
+                        filterList.add(message);
+                    } else if (message.content.toLowerCase().contains(filterPattern)) {
+                        filterList.add(message);
+                    } else if (message.to.toLowerCase().contains(filterPattern)) {
+                        filterList.add(message);
+                    } else if (message.from.toLowerCase().contains(filterPattern)) {
+                        filterList.add(message);
                     }
                 }
             }
@@ -88,10 +88,10 @@ public class EmailListAdapter extends RecyclerView.Adapter<EmailViewHolder> impl
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            if (emails != null) {
-                emails.clear();
+            if (messages != null) {
+                messages.clear();
             }
-            emails.addAll((List<Email>) filterResults.values);
+            messages.addAll((List<Message>) filterResults.values);
             notifyDataSetChanged();
         }
     };

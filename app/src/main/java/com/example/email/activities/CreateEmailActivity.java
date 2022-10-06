@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.email.R;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Account;
 import com.example.email.utils.Constants;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -30,6 +32,8 @@ import javax.mail.internet.MimeMessage;
 
 public class CreateEmailActivity extends BaseActivity {
 
+    private MailDatabase db;
+    private Account account;
     private Toolbar toolbar;
     private TextInputEditText emailTo;
     private TextInputEditText emailCc;
@@ -41,6 +45,9 @@ public class CreateEmailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_email);
+
+        db = MailDatabase.getDbInstance(CreateEmailActivity.this);
+        account = db.accountDao().getLast();
 
         emailTo = findViewById(R.id.create_email_to);
         emailCc = findViewById(R.id.create_email_cc);
@@ -90,13 +97,13 @@ public class CreateEmailActivity extends BaseActivity {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(Constants.EMAIL, Constants.PASSWORD);
+                return new PasswordAuthentication(account.username, account.password);
             }
         });
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(Constants.EMAIL));
+            message.setFrom(new InternetAddress(account.username));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(Objects.requireNonNull(emailTo.getText()).toString().trim()));
             message.setSubject(Objects.requireNonNull(emailSubject.getText()).toString().trim());

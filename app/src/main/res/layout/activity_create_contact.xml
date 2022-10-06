@@ -33,7 +33,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/create_contact_first_name"
+            android:id="@+id/create_contact_first_name_field_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,6 +41,7 @@
             android:hint="First name">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/create_contact_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
@@ -48,14 +49,15 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/create_contact_last_name"
+            android:id="@+id/create_contact_last_name_field_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/create_contact_first_name"
+            android:layout_below="@id/create_contact_first_name_field_text"
             android:hint="Last name">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/create_contact_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
@@ -63,14 +65,15 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/create_contact_email"
+            android:id="@+id/create_contact_email_field_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/create_contact_last_name"
+            android:layout_below="@id/create_contact_last_name_field_text"
             android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/create_contact_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress" />
@@ -80,7 +83,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/create_contact_email"
+            android:layout_below="@id/create_contact_email_field_text"
             android:orientation="horizontal"
             android:weightSum="2">
 

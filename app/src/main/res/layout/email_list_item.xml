@@ -40,6 +40,8 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/email_item_sender_icon"
             android:textStyle="normal"
+            android:ellipsize="end"
+            android:maxLines="1"
             tools:text="Boxes" />
 
         <TextView
@@ -52,12 +54,11 @@
             android:textSize="12sp"
             tools:text="Lets move some boxes around" />
 
-        <TextClock
+        <TextView
             android:id="@+id/email_item_date_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             tools:text="22:13" />
 
     </RelativeLayout>
