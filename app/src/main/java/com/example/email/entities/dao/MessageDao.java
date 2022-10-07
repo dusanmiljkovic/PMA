@@ -14,14 +14,18 @@ import java.util.List;
 
 @Dao
 public interface MessageDao {
-    @Query("SELECT * FROM message ORDER BY received_date DESC")
-    List<Message> getAll();
+    @Query("SELECT * FROM message ORDER BY " +
+            "CASE WHEN :isAsc = 1 THEN received_date END ASC, \n" +
+            "CASE WHEN :isAsc = 0 THEN received_date END DESC")
+    List<Message> getAll(boolean isAsc);
 
     @Query("SELECT * FROM message WHERE id IN (:messageIds)")
     List<Message> loadAllByIds(int[] messageIds);
 
-    @Query("SELECT * FROM message WHERE folderId = (:folderId) ORDER BY received_date DESC")
-    List<Message> loadAllByFolderId(int folderId);
+    @Query("SELECT * FROM message WHERE folderId = (:folderId) ORDER BY " +
+            "CASE WHEN :isAsc = 1 THEN received_date END ASC, \n" +
+            "CASE WHEN :isAsc = 0 THEN received_date END DESC")
+    List<Message> loadAllByFolderId(int folderId, boolean isAsc);
 
     @Query("SELECT * FROM message WHERE message_number = :messageNumber")
     Message findByMessageNumber(int messageNumber);

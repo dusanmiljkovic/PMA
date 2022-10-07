@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fa028b42851a5e7ad0983da86df2c036",
+    "identityHash": "8705c13503129c05ddca9e27cd9372f8",
     "entities": [
       {
         "tableName": "Folder",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "Message",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `message_number` INTEGER NOT NULL, `received_date` INTEGER, `subject` TEXT, `content` TEXT, `from` TEXT, `to` TEXT, `folderId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `message_number` INTEGER NOT NULL, `received_date` INTEGER, `subject` TEXT, `content` TEXT, `text_is_html` INTEGER NOT NULL, `from` TEXT, `to` TEXT, `folderId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -69,6 +69,12 @@
             "columnName": "content",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "textIsHtml",
+            "columnName": "text_is_html",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "from",
@@ -208,7 +214,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fa028b42851a5e7ad0983da86df2c036')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8705c13503129c05ddca9e27cd9372f8')"
     ]
   }
 }

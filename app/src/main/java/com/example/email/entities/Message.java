@@ -30,6 +30,9 @@ public class Message {
     @ColumnInfo(name = "content")
     public String content;
 
+    @ColumnInfo(name = "text_is_html")
+    public boolean textIsHtml;
+
     @ColumnInfo(name = "from")
     public String from;
 

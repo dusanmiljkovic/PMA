@@ -39,7 +39,7 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Message message) {
         senderImage.setBackgroundResource(R.mipmap.ic_launcher);
-        sender.setText(message.from.substring(1).split(" <")[0]);
+        sender.setText(message.from.split(" <")[0]);
         subject.setText(message.subject);
         content.setText(message.content);
         dateTime.setText(message.getReceivedDateString());

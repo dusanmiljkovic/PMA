@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 
@@ -23,6 +25,7 @@ public class MailWorker extends Worker {
     private final Properties properties = System.getProperties();
     private MailDatabase db;
     private Account account;
+    private boolean textIsHtml;
 
     public MailWorker(
             @NonNull Context context,
@@ -97,8 +100,9 @@ public class MailWorker extends Worker {
                                 message.messageNumber = msg.getMessageNumber();
                                 message.setReceivedDate(msg.getReceivedDate());
                                 message.subject = msg.getSubject();
-                                message.content = msg.getContent().toString();
-                                message.from = Arrays.toString(msg.getFrom());
+                                message.content = getText(msg);
+                                message.textIsHtml = textIsHtml;
+                                message.from = msg.getFrom()[0].toString();
                                 message.to = Arrays.toString(msg.getAllRecipients());
                                 message.folderId = folderFromDb;
                                 message.accountId = account.id;
@@ -118,5 +122,44 @@ public class MailWorker extends Worker {
             System.out.println("An error occurred while getting messages.");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Return the primary text content of the message.
+     */
+    private String getText(Part p) throws MessagingException, IOException {
+        if (p.isMimeType("text/*")) {
+            String s = (String)p.getContent();
+            textIsHtml = p.isMimeType("text/html");
+            return s;
+        }
+        if (p.isMimeType("multipart/alternative")) {
+        // prefer html text over plain text
+            Multipart mp = (Multipart)p.getContent();
+            String text = null;
+            for (int i = 0; i < mp.getCount(); i++) {
+                Part bp = mp.getBodyPart(i);
+                if (bp.isMimeType("text/plain")) {
+                    if (text == null)
+                        text = getText(bp);
+                    continue;
+                } else if (bp.isMimeType("text/html")) {
+                    String s = getText(bp);
+                    if (s != null)
+                        return s;
+                } else {
+                    return getText(bp);
+                }
+            }
+            return text;
+        } else if (p.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)p.getContent();
+            for (int i = 0; i < mp.getCount(); i++) {
+                String s = getText(mp.getBodyPart(i));
+                if (s != null)
+                    return s;
+            }
+        }
+        return null;
     }
 }
