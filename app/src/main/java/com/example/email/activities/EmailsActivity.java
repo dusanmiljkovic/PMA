@@ -1,6 +1,7 @@
 package com.example.email.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import com.example.email.adapters.EmailListAdapter;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Message;
 import com.example.email.services.MailWorker;
+import com.example.email.utils.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class EmailsActivity extends BaseActivity {
     private MailDatabase db;
     private EmailListAdapter emailListAdapter;
+    private boolean sortAscending;
     private List<Message> messagesList = new ArrayList<>();
 
     @Override
@@ -36,7 +39,7 @@ public class EmailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emails);
 
-        db = MailDatabase.getDbInstance(EmailsActivity.this);
+        initialise();
         initEmails();
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu_title_emails);
@@ -105,7 +108,13 @@ public class EmailsActivity extends BaseActivity {
         return true;
     }
 
+    private void initialise(){
+        db = MailDatabase.getDbInstance(EmailsActivity.this);
+        SharedPreferences sp = getSharedPreferences(Constants.MESSAGES_SORT, 0);
+        sortAscending = sp.getBoolean(Constants.MESSAGES_SORT_ASCENDING, false);
+    }
+
     private void initEmails() {
-        messagesList = db.messageDao().getAll();
+        messagesList = db.messageDao().getAll(sortAscending);
     }
 }

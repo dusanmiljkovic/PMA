@@ -2,6 +2,7 @@ package com.example.email.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Message;
+import com.example.email.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +27,7 @@ import java.util.Objects;
 public class FolderActivity extends BaseActivity {
     private MailDatabase db;
     private Bundle extras;
-    private Toolbar toolbar;
-    private RecyclerView recyclerView;
-    private EmailListAdapter emailListAdapter;
+    private boolean sortAscending;
     private List<Message> messages = new ArrayList<>();
 
     @Override
@@ -37,6 +37,8 @@ public class FolderActivity extends BaseActivity {
         extras = getIntent().getExtras();
 
         db = MailDatabase.getDbInstance(FolderActivity.this);
+        SharedPreferences sp = getSharedPreferences(Constants.MESSAGES_SORT, 0);
+        sortAscending = sp.getBoolean(Constants.MESSAGES_SORT_ASCENDING, false);
         initEmails();
 
         if (getSupportActionBar() != null) {
@@ -45,10 +47,10 @@ public class FolderActivity extends BaseActivity {
         initToolbar();
         Objects.requireNonNull(getSupportActionBar()).setTitle("Folder");
 
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        emailListAdapter = new EmailListAdapter(messages);
+        EmailListAdapter emailListAdapter = new EmailListAdapter(messages);
         emailListAdapter.setOnItemClickListener(position -> {
             Message message = messages.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
@@ -62,7 +64,7 @@ public class FolderActivity extends BaseActivity {
     }
 
     private void initToolbar() {
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,7 +73,7 @@ public class FolderActivity extends BaseActivity {
     }
 
     private void initEmails() {
-        messages = db.messageDao().loadAllByFolderId(extras.getInt("FolderId"));
+        messages = db.messageDao().loadAllByFolderId(extras.getInt("FolderId"), sortAscending);
     }
 
     @Override
