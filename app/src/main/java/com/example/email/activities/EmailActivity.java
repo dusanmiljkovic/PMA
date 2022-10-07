@@ -1,7 +1,9 @@
 package com.example.email.activities;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,7 +48,13 @@ public class EmailActivity extends BaseActivity {
 
         tEmailFrom.setText(extras.getString("From"));
         tEmailSubject.setText(extras.getString("Subject"));
-        tEmailContent.setText(extras.getString("Content"));
+        boolean textIsHtml = extras.getBoolean("TextIsHtml");
+        if (textIsHtml) {
+            tEmailContent.setText(Html.fromHtml(extras.getString("Content"), Html.FROM_HTML_MODE_COMPACT));
+        }
+        else {
+            tEmailContent.setText(extras.getString("Content"));
+        }
     }
 
     private void initToolbar() {

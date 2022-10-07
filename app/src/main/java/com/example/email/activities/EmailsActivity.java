@@ -74,9 +74,10 @@ public class EmailsActivity extends BaseActivity {
         emailListAdapter.setOnItemClickListener(position -> {
             Message message = messagesList.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("From", message.from.substring(1).split(" <")[0]);
+            intent.putExtra("From", message.from.split(" <")[0]);
             intent.putExtra("Subject", message.subject);
             intent.putExtra("Content", message.content);
+            intent.putExtra("TextIsHtml", message.textIsHtml);
             startActivity(intent);
         });
 
