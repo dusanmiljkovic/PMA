@@ -1,12 +1,12 @@
 package com.example.email.activities;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,23 +14,34 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.email.R;
+import com.example.email.database.MailDatabase;
+import com.example.email.entities.Message;
 
 import java.util.Objects;
 
 public class EmailActivity extends BaseActivity {
 
     private Bundle extras;
-
+    private MailDatabase db;
     private Toolbar toolbar;
     private TextView tEmailFrom;
+    private TextView tEmailTo;
     private TextView tEmailSubject;
-    private TextView tEmailContent;
+    private WebView tEmailContent;
+    private ImageView ivSenderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
+
+        db = MailDatabase.getDbInstance(EmailActivity.this);
         extras = getIntent().getExtras();
+        tEmailFrom = findViewById(R.id.email_from);
+        tEmailTo = findViewById(R.id.email_to);
+        tEmailSubject = findViewById(R.id.email_subject);
+        tEmailContent = findViewById(R.id.email_content);
+        ivSenderImage = findViewById(R.id.email_sender_icon);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -42,18 +53,22 @@ public class EmailActivity extends BaseActivity {
     }
 
     private void initContent() {
-        tEmailFrom = findViewById(R.id.email_from);
-        tEmailSubject = findViewById(R.id.email_subject);
-        tEmailContent = findViewById(R.id.email_content);
+        int messageId = extras.getInt("MessageId");
+        Message message = db.messageDao().findById(messageId);
 
-        tEmailFrom.setText(extras.getString("From"));
-        tEmailSubject.setText(extras.getString("Subject"));
-        boolean textIsHtml = extras.getBoolean("TextIsHtml");
-        if (textIsHtml) {
-            tEmailContent.setText(Html.fromHtml(extras.getString("Content"), Html.FROM_HTML_MODE_COMPACT));
+        tEmailFrom.setText(message.from.split("<")[0]);
+        tEmailTo.setText(message.to);
+        tEmailSubject.setText(message.subject);
+        ivSenderImage.setBackgroundResource(R.mipmap.ic_launcher);
+
+        tEmailContent.getSettings().setBuiltInZoomControls(true);
+        tEmailContent.getSettings().setJavaScriptEnabled(true);
+        tEmailContent.getSettings().setDomStorageEnabled(true);
+        if (message.textIsHtml) {
+            tEmailContent.loadDataWithBaseURL("", message.content, "text/html; charset=utf-8", "utf-8", null);
         }
         else {
-            tEmailContent.setText(extras.getString("Content"));
+            tEmailContent.loadData(message.content, "text; charset=utf-8", "utf-8");
         }
     }
 

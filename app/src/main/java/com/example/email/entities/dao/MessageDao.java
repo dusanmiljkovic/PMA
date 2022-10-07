@@ -22,6 +22,9 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE id IN (:messageIds)")
     List<Message> loadAllByIds(int[] messageIds);
 
+    @Query("SELECT * FROM message WHERE id = :messageIds")
+    Message findById(int messageIds);
+
     @Query("SELECT * FROM message WHERE folderId = (:folderId) ORDER BY " +
             "CASE WHEN :isAsc = 1 THEN received_date END ASC, \n" +
             "CASE WHEN :isAsc = 0 THEN received_date END DESC")
