@@ -1,6 +1,8 @@
 package com.example.email.services;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
@@ -46,7 +48,7 @@ public class MailService {
                 }
             }
         } catch (MessagingException e) {
-            System.out.println("An error occurred while getting folders.");
+            System.out.println("An error occurred while deleting an email.");
             e.printStackTrace();
 
         }

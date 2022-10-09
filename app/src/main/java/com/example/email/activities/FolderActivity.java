@@ -54,9 +54,7 @@ public class FolderActivity extends BaseActivity {
         emailListAdapter.setOnItemClickListener(position -> {
             Message message = messages.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("From", message.from);
-            intent.putExtra("Subject", message.subject);
-            intent.putExtra("Content", message.content);
+            intent.putExtra("MessageId", message.id);
             startActivity(intent);
         });
         recyclerView.setAdapter(emailListAdapter);

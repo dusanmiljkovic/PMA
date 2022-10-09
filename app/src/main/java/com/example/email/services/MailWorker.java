@@ -12,7 +12,6 @@ import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -20,6 +19,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
 
 public class MailWorker extends Worker {
     private final Properties properties = System.getProperties();
@@ -102,8 +102,8 @@ public class MailWorker extends Worker {
                                 message.subject = msg.getSubject();
                                 message.content = getText(msg);
                                 message.textIsHtml = textIsHtml;
-                                message.from = msg.getFrom()[0].toString();
-                                message.to = Arrays.toString(msg.getAllRecipients());
+                                message.from = InternetAddress.toString(msg.getFrom());
+                                message.to = InternetAddress.toString(msg.getRecipients(javax.mail.Message.RecipientType.TO));
                                 message.folderId = folderFromDb;
                                 message.accountId = account.id;
                                 db.messageDao().insertAll(message);

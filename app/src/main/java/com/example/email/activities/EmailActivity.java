@@ -1,6 +1,8 @@
 package com.example.email.activities;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.email.R;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Message;
+import com.example.email.services.MailService;
 
 import java.util.Objects;
 
@@ -29,6 +32,8 @@ public class EmailActivity extends BaseActivity {
     private TextView tEmailSubject;
     private WebView tEmailContent;
     private ImageView ivSenderImage;
+    private MailService service;
+    private Message message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class EmailActivity extends BaseActivity {
 
         db = MailDatabase.getDbInstance(EmailActivity.this);
         extras = getIntent().getExtras();
+        service = new MailService(EmailActivity.this);
         tEmailFrom = findViewById(R.id.email_from);
         tEmailTo = findViewById(R.id.email_to);
         tEmailSubject = findViewById(R.id.email_subject);
@@ -54,7 +60,7 @@ public class EmailActivity extends BaseActivity {
 
     private void initContent() {
         int messageId = extras.getInt("MessageId");
-        Message message = db.messageDao().findById(messageId);
+        message = db.messageDao().findById(messageId);
 
         tEmailFrom.setText(message.from.split("<")[0]);
         tEmailTo.setText(message.to);
@@ -96,7 +102,9 @@ public class EmailActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Save clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_delete:
-                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
+                AsyncTaskRunner runner = new AsyncTaskRunner();
+                runner.execute();
+//                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_reply:
                 Toast.makeText(getApplicationContext(), "Reply clicked", Toast.LENGTH_SHORT).show();
@@ -111,4 +119,40 @@ public class EmailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+        private String resp;
+
+        @Override
+        protected String doInBackground(String... params) {
+//            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+            try {
+                service.deleteMail(message.messageNumber);
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            }
+            return resp;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            // execution of result of Long time consuming operation
+            Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            Toast.makeText(getApplicationContext(), "Deleting message", Toast.LENGTH_SHORT).show();
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+//            Toast.makeText(getApplicationContext(), "Deleting message", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
