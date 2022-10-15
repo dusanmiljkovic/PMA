@@ -69,18 +69,31 @@ public class FoldersActivity extends BaseActivity {
     }
 
     private void fillData(){
-        folders = db.folderDao().getAll();
+        Bundle extras = getIntent().getExtras();
+        int folderId = extras.getInt("FolderId");
+        if (folderId == -1)
+            folders = db.folderDao().getAll();
+        else
+            folders = db.folderDao().getSubFolders(folderId);
+
         FolderListAdapter folderListAdapter = new FolderListAdapter(folders);
 
         recyclerView.setAdapter(folderListAdapter);
 
         folderListAdapter.setOnItemClickListener(position -> {
             Folder folder = folders.get(position);
-            Intent intent = new Intent(getApplicationContext(), FolderActivity.class);
-            intent.putExtra("FolderId", folder.id);
-            boolean visibleDelete = position > 7;
-            intent.putExtra("FolderDeletable", visibleDelete);
-            startActivity(intent);
+
+            if (folder.holds == javax.mail.Folder.HOLDS_MESSAGES) {
+                Intent intent = new Intent(getApplicationContext(), FolderActivity.class);
+                intent.putExtra("FolderId", folder.id);
+                boolean visibleDelete = position > 7;
+                intent.putExtra("FolderDeletable", visibleDelete);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(getApplicationContext(), FoldersActivity.class);
+                intent.putExtra("FolderId", folder.id);
+                startActivity(intent);
+            }
         });
     }
 }

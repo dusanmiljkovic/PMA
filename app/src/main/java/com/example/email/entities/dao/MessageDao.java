@@ -27,7 +27,8 @@ public interface MessageDao {
 
     @Query("SELECT * FROM message WHERE folderId = (:folderId) ORDER BY " +
             "CASE WHEN :isAsc = 1 THEN received_date END ASC, \n" +
-            "CASE WHEN :isAsc = 0 THEN received_date END DESC")
+            "CASE WHEN :isAsc = 0 THEN received_date END DESC \n" +
+            "LIMIT 200")
     List<Message> loadAllByFolderId(int folderId, boolean isAsc);
 
     @Query("SELECT * FROM message WHERE message_number = :messageNumber")

@@ -27,9 +27,6 @@ public interface FolderDao {
     @Query("SELECT * FROM folder WHERE name LIKE :name LIMIT 1")
     Folder findByName(String name);
 
-    @Query("SELECT * FROM folder WHERE full_name LIKE :full_name LIMIT 1")
-    Folder findByFullName(String full_name);
-
     @Insert
     void insertAll(Folder... folders);
 
@@ -41,6 +38,9 @@ public interface FolderDao {
 
     @Query("DELETE FROM folder WHERE id IN (:folderIds)")
     Void deleteAllByIds(int[] folderIds);
+
+    @Query("SELECT * FROM folder WHERE folderId = :folderId")
+    List<Folder> getSubFolders(int folderId);
 
     @Transaction
     @Query("SELECT * FROM folder")

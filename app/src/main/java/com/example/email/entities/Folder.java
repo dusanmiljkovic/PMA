@@ -14,4 +14,9 @@ public class Folder {
 
     @ColumnInfo(name = "full_name")
     public String fullName;
+
+    @ColumnInfo(name = "holds")
+    public int holds;
+
+    public int folderId;
 }

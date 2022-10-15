@@ -1,5 +1,6 @@
 package com.example.email.activities;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.Objects;
 
 public class SettingsActivity extends BaseActivity {
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch ascendingSwitch;
     private SharedPreferences sp;
 

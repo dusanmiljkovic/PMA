@@ -1,9 +1,11 @@
 package com.example.email.activities;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ public class CreateFolderActivity extends BaseActivity {
     private Toolbar toolbar;
     private Button bSaveFolder;
     private Button bCancel;
+    private Switch sHoldsFolders;
     private MailService service;
     private TextView tFolderName;
 
@@ -29,9 +32,10 @@ public class CreateFolderActivity extends BaseActivity {
         setContentView(R.layout.activity_create_folder);
 
         service = new MailService(CreateFolderActivity.this);
-        bSaveFolder = findViewById(R.id.new_folder_save_button);
-        bCancel = findViewById(R.id.new_folder_cancel_button);
-        tFolderName = findViewById(R.id.new_folder_name);
+        bSaveFolder = findViewById(R.id.create_folder_save_button);
+        bCancel = findViewById(R.id.create_folder_cancel_button);
+        tFolderName = findViewById(R.id.create_folder_name);
+        sHoldsFolders = findViewById(R.id.create_folder_holds_folders);
 
         bCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -70,7 +74,7 @@ public class CreateFolderActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                service.createFolder(tFolderName.getText().toString());
+                service.createFolder(tFolderName.getText().toString(), sHoldsFolders.isChecked());
             } catch (Exception e) {
                 e.printStackTrace();
                 resp = e.getMessage();

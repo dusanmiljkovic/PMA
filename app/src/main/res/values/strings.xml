@@ -57,11 +57,12 @@
     <string name="folder_menu_edit_folder">Edit folder</string>
     <string name="folder_menu_delete_folder">Delete folder</string>
     <string name="profile_menu_logout">Logout</string>
-    <string name="new_folder_type_in_the_name">Type the name...</string>
+    <string name="new_folder_type_in_the_name">Type the name…</string>
     <string name="cancel_button">Cancel</string>
     <string name="save_button">Save</string>
     <string name="contacts_menu_create_new_contact">Create new contact</string>
     <string name="contact_menu_edit_contact">Edit contact</string>
     <string name="settings_sort_messages_ascending">Sort messages ascending</string>
     <string name="email_sender_icon">Email sender icon</string>
+    <string name="create_folder_holds_folders">HOLDS FOLDERS</string>
 </resources>

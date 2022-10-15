@@ -79,7 +79,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(getApplicationContext(), EmailsActivity.class));
                 break;
             case R.id.menu_folders:
-                startActivity(new Intent(getApplicationContext(), FoldersActivity.class));
+                Intent intent = new Intent(getApplicationContext(), FoldersActivity.class);
+                intent.putExtra("FolderId", -1);
+                startActivity(intent);
                 break;
             case R.id.menu_profile:
                 startActivity(new Intent(getApplicationContext(), ProfileActivity.class));

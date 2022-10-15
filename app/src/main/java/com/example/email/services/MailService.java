@@ -55,7 +55,7 @@ public class MailService {
         }
     }
 
-    public void createFolder(String folderName) {
+    public void createFolder(String folderName, boolean holdsFolders) {
         try {
             Session session = Session.getDefaultInstance(properties, null);
             Store store = session.getStore("imaps");
@@ -63,11 +63,13 @@ public class MailService {
 
             Folder someFolder = store.getFolder(folderName);
             if (!someFolder.exists()) {
-                if (someFolder.create(Folder.HOLDS_MESSAGES)) {
+                int folderHolds = holdsFolders ? Folder.HOLDS_FOLDERS : Folder.HOLDS_MESSAGES;
+                if (someFolder.create(folderHolds)) {
                     someFolder.setSubscribed(true);
                     System.out.println("Folder was created successfully");
 
                     com.example.email.entities.Folder folder = new com.example.email.entities.Folder();
+                    folder.holds = folderHolds;
                     folder.name = folderName;
                     folder.fullName = folderName;
                     db.folderDao().insertAll(folder);

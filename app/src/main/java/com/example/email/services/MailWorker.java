@@ -69,6 +69,7 @@ public class MailWorker extends Worker {
                 if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
                     if (db.folderDao().findByName(folderName) == null) {
                         Folder folderToAdd = new Folder();
+                        folderToAdd.holds = javax.mail.Folder.HOLDS_MESSAGES;
                         folderToAdd.name = folderName;
                         folderToAdd.fullName = folder.getFullName();
                         db.folderDao().insertAll(folderToAdd);
