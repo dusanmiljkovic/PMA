@@ -14,24 +14,23 @@ import com.example.email.services.MailService;
 
 import java.util.Objects;
 
-public class CreateFolderActivity extends BaseActivity {
+public class UpdateFolderActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private Button bSaveFolder;
     private Button bCancel;
     private MailService service;
     private TextView tFolderName;
-
+    private Bundle extras;
+    private int folderId;
+    private String oldFolderName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_folder);
+        setContentView(R.layout.activity_update_folder);
 
-        service = new MailService(CreateFolderActivity.this);
-        bSaveFolder = findViewById(R.id.new_folder_save_button);
-        bCancel = findViewById(R.id.new_folder_cancel_button);
-        tFolderName = findViewById(R.id.new_folder_name);
+        intiData();
 
         bCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -41,7 +40,7 @@ public class CreateFolderActivity extends BaseActivity {
 
         bSaveFolder.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                CreateFolderAsyncTask createFolderAsyncTask = new CreateFolderAsyncTask();
+                UpdateFolderAsyncTask createFolderAsyncTask = new UpdateFolderAsyncTask();
                 createFolderAsyncTask.execute();
             }
         });
@@ -50,7 +49,18 @@ public class CreateFolderActivity extends BaseActivity {
             getSupportActionBar().hide();
         }
         initToolbar();
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Create new folder");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Update folder");
+    }
+
+    private void intiData(){
+        service = new MailService(UpdateFolderActivity.this);
+        bSaveFolder = findViewById(R.id.update_folder_save_button);
+        bCancel = findViewById(R.id.update_folder_cancel_button);
+        tFolderName = findViewById(R.id.update_folder_name);
+        extras = getIntent().getExtras();
+        folderId = extras.getInt("FolderId");
+        oldFolderName = extras.getString("FolderName");
+        tFolderName.setText(oldFolderName);
     }
 
     private void initToolbar() {
@@ -63,14 +73,14 @@ public class CreateFolderActivity extends BaseActivity {
     }
 
 
-    private class CreateFolderAsyncTask extends AsyncTask<String, String, String> {
+    private class UpdateFolderAsyncTask extends AsyncTask<String, String, String> {
 
         private String resp;
 
         @Override
         protected String doInBackground(String... params) {
             try {
-                service.createFolder(tFolderName.getText().toString());
+                service.updateFolder(folderId, tFolderName.getText().toString(), oldFolderName);
             } catch (Exception e) {
                 e.printStackTrace();
                 resp = e.getMessage();
@@ -80,13 +90,13 @@ public class CreateFolderActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getApplicationContext(), "Created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
             finish();
         }
 
         @Override
         protected void onPreExecute() {
-            Toast.makeText(getApplicationContext(), "Creating folder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Updating folder", Toast.LENGTH_SHORT).show();
         }
 
         @Override

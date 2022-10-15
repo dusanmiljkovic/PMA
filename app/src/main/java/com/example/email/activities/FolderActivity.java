@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.database.MailDatabase;
+import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
 import com.example.email.utils.Constants;
 
@@ -29,6 +30,7 @@ public class FolderActivity extends BaseActivity {
     private Bundle extras;
     private boolean sortAscending;
     private List<Message> messages = new ArrayList<>();
+    private Folder folder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,14 @@ public class FolderActivity extends BaseActivity {
         db = MailDatabase.getDbInstance(FolderActivity.this);
         SharedPreferences sp = getSharedPreferences(Constants.MESSAGES_SORT, 0);
         sortAscending = sp.getBoolean(Constants.MESSAGES_SORT_ASCENDING, false);
+
         initEmails();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
         initToolbar();
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Folder");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(folder.name);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -71,7 +74,17 @@ public class FolderActivity extends BaseActivity {
     }
 
     private void initEmails() {
-        messages = db.messageDao().loadAllByFolderId(extras.getInt("FolderId"), sortAscending);
+        int folderId = extras.getInt("FolderId");
+        folder = db.folderDao().findById(folderId);
+        messages = db.messageDao().loadAllByFolderId(folderId, sortAscending);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        folder = db.folderDao().findById(folder.id);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(folder.name);
     }
 
     @Override
@@ -81,11 +94,15 @@ public class FolderActivity extends BaseActivity {
         return true;
     }
 
-    @SuppressLint("NonConstantResourceId")
+//    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_edit_folder) {
-            Toast.makeText(getApplicationContext(), "Edit clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, UpdateFolderActivity.class);
+            intent.putExtra("FolderId", folder.id);
+            intent.putExtra("FolderName", folder.name);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

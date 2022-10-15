@@ -5,7 +5,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
+import com.example.email.entities.Contact;
 import com.example.email.entities.Folder;
 import com.example.email.entities.FolderWithMessages;
 
@@ -19,6 +21,9 @@ public interface FolderDao {
     @Query("SELECT * FROM folder WHERE id IN (:folderIds)")
     List<Folder> loadAllByIds(int[] folderIds);
 
+    @Query("SELECT * FROM folder WHERE id = :id LIMIT 1")
+    Folder findById(int id);
+
     @Query("SELECT * FROM folder WHERE name LIKE :name LIMIT 1")
     Folder findByName(String name);
 
@@ -27,6 +32,9 @@ public interface FolderDao {
 
     @Insert
     void insertAll(Folder... folders);
+
+    @Update
+    Integer updateFolder(Folder folder);
 
     @Delete
     void delete(Folder folder);

@@ -125,7 +125,6 @@ public class EmailActivity extends BaseActivity {
 
         @Override
         protected String doInBackground(String... params) {
-//            publishProgress("Sleeping..."); // Calls onProgressUpdate()
             try {
                 service.deleteMail(message.messageNumber);
             } catch (Exception e) {

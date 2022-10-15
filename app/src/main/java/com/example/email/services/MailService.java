@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -51,6 +52,55 @@ public class MailService {
             System.out.println("An error occurred while deleting an email.");
             e.printStackTrace();
 
+        }
+    }
+
+    public void createFolder(String folderName) {
+        try {
+            Session session = Session.getDefaultInstance(properties, null);
+            Store store = session.getStore("imaps");
+            store.connect("imap.gmail.com", account.username, account.password);
+
+            Folder someFolder = store.getFolder(folderName);
+            if (!someFolder.exists()) {
+                if (someFolder.create(Folder.HOLDS_MESSAGES)) {
+                    someFolder.setSubscribed(true);
+                    System.out.println("Folder was created successfully");
+
+                    com.example.email.entities.Folder folder = new com.example.email.entities.Folder();
+                    folder.name = folderName;
+                    folder.fullName = folderName;
+                    db.folderDao().insertAll(folder);
+                }
+            }
+        } catch (MessagingException e) {
+            System.out.println("An error occurred while creating a folder.");
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFolder(int folderId, String folderName, String oldFolderName) {
+        try {
+            if(Objects.equals(folderName, oldFolderName))
+                return;
+
+            Session session = Session.getDefaultInstance(properties, null);
+            Store store = session.getStore("imaps");
+            store.connect("imap.gmail.com", account.username, account.password);
+
+            Folder someFolder = store.getFolder(oldFolderName);
+            if (someFolder.exists()) {
+                Folder newFolder = store.getFolder(folderName);
+                someFolder.renameTo(newFolder);
+
+                com.example.email.entities.Folder folder = db.folderDao().findById(folderId);
+                folder.name = folderName;
+                folder.fullName = folderName;
+                db.folderDao().updateFolder(folder);
+            }
+        } catch (MessagingException e) {
+            System.out.println("An error occurred while updating a folder.");
+            e.printStackTrace();
         }
     }
 }

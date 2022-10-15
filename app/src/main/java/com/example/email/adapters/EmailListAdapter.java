@@ -67,17 +67,21 @@ public class EmailListAdapter extends RecyclerView.Adapter<EmailViewHolder> impl
                 filterList.addAll(messagesFull);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
-
-                for (Message message : messagesFull) {
-                    if (message.subject.toLowerCase().contains(filterPattern)) {
-                        filterList.add(message);
-                    } else if (message.content.toLowerCase().contains(filterPattern)) {
-                        filterList.add(message);
-                    } else if (message.to.toLowerCase().contains(filterPattern)) {
-                        filterList.add(message);
-                    } else if (message.from.toLowerCase().contains(filterPattern)) {
-                        filterList.add(message);
+                try {
+                    for (Message message : messagesFull) {
+                        if (message.subject.toLowerCase().contains(filterPattern)) {
+                            filterList.add(message);
+                        } else if (message.content.toLowerCase().contains(filterPattern)) {
+                            filterList.add(message);
+                        } else if (message.to.toLowerCase().contains(filterPattern)) {
+                            filterList.add(message);
+                        } else if (message.from.toLowerCase().contains(filterPattern)) {
+                            filterList.add(message);
+                        }
                     }
+                } catch (Exception e){
+                    System.out.println("An error occurred.");
+                    e.printStackTrace();
                 }
             }
 

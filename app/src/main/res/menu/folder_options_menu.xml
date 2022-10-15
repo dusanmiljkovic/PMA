@@ -8,4 +8,10 @@
         android:title="@string/folder_menu_edit_folder"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_delete_folder"
+        android:icon="@drawable/ic_baseline_delete_outline_24"
+        android:title="@string/folder_menu_delete_folder"
+        app:showAsAction="ifRoom" />
+
 </menu>

@@ -42,6 +42,9 @@
             android:name=".activities.FoldersActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.UpdateFolderActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.BaseActivity"
             android:exported="true"
             android:label="@string/title_activity_base"
