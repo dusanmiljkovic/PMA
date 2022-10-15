@@ -103,4 +103,22 @@ public class MailService {
             e.printStackTrace();
         }
     }
+
+    public void deleteFolder(int folderId) {
+        try {
+            Session session = Session.getDefaultInstance(properties, null);
+            Store store = session.getStore("imaps");
+            store.connect("imap.gmail.com", account.username, account.password);
+
+            com.example.email.entities.Folder folder = db.folderDao().findById(folderId);
+            Folder someFolder = store.getFolder(folder.name);
+            if (someFolder.exists()) {
+                someFolder.delete(true);
+            }
+            db.folderDao().delete(folder);
+        } catch (MessagingException e) {
+            System.out.println("An error occurred while updating a folder.");
+            e.printStackTrace();
+        }
+    }
 }

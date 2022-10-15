@@ -13,5 +13,4 @@
         android:icon="@drawable/ic_baseline_delete_outline_24"
         android:title="@string/folder_menu_delete_folder"
         app:showAsAction="ifRoom" />
-
 </menu>
