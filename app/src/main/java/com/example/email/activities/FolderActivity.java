@@ -99,7 +99,9 @@ public class FolderActivity extends BaseActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.folder_options_menu, menu);
         if(!folderDeletable){
-            MenuItem item = menu.findItem(R.id.menu_delete_folder);
+            MenuItem item = menu.findItem(R.id.menu_edit_folder);
+            item.setVisible(false);
+            item = menu.findItem(R.id.menu_delete_folder);
             item.setVisible(false);
         }
         return true;
