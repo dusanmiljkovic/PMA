@@ -10,8 +10,12 @@ import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
 import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
+import com.sun.mail.util.QPDecoderStream;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -129,9 +133,28 @@ public class MailWorker extends Worker {
      */
     private String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
-            String s = (String)p.getContent();
-            textIsHtml = p.isMimeType("text/html");
-            return s;
+            if (p.getContent() instanceof String) {
+                String s = (String)p.getContent();
+                textIsHtml = p.isMimeType("text/html");
+                return s;
+            } else if (p.getContent() instanceof QPDecoderStream) {
+                BufferedInputStream bis = new BufferedInputStream((InputStream) p.getContent());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                while (true) {
+                    int c = bis.read();
+                    if (c == -1) {
+                        break;
+                    }
+                    baos.write(c);
+                }
+                String s = baos.toString();
+                textIsHtml = p.isMimeType("text/html");
+                return s;
+            }
+            else {
+                return "";
+            }
+
         }
         if (p.isMimeType("multipart/alternative")) {
         // prefer html text over plain text

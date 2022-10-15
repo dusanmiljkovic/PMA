@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FolderListAdapter extends RecyclerView.Adapter<FolderImageView> {
 
-    private final List<FolderWithMessages> folderWithMessagesList;
+    private final List<Folder> folderList;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -27,8 +27,8 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderImageView> {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public FolderListAdapter(List<FolderWithMessages> folderWithMessagesList) {
-        this.folderWithMessagesList = folderWithMessagesList;
+    public FolderListAdapter(List<Folder> folders) {
+        this.folderList = folders;
     }
 
     @NonNull
@@ -40,13 +40,13 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderImageView> {
 
     @Override
     public void onBindViewHolder(@NonNull FolderImageView holder, int position) {
-        FolderWithMessages folder = folderWithMessagesList.get(position);
+        Folder folder = folderList.get(position);
         holder.bind(folder);
     }
 
     @Override
     public int getItemCount() {
-        return folderWithMessagesList.size();
+        return folderList.size();
     }
 
 }

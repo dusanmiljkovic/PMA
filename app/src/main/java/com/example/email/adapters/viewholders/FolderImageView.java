@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.email.R;
+import com.example.email.activities.FoldersActivity;
 import com.example.email.adapters.FolderListAdapter;
+import com.example.email.database.MailDatabase;
 import com.example.email.entities.Folder;
 import com.example.email.entities.FolderWithMessages;
 
@@ -31,9 +33,11 @@ public class FolderImageView extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(FolderWithMessages folderWithMessages) {
-        title.setText(folderWithMessages.folder.name);
-        messagesSum.setText(String.valueOf(folderWithMessages.messages.size()));
+    public void bind(Folder folder) {
+        title.setText(folder.name);
+        MailDatabase db = MailDatabase.getDbInstance(itemView.getContext());
+        int messagesCount = db.messageDao().countByFolderId(folder.id);
+        messagesSum.setText(String.valueOf(messagesCount));
     }
 
 }

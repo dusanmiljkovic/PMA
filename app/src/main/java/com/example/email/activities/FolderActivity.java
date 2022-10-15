@@ -34,6 +34,7 @@ public class FolderActivity extends BaseActivity {
     private Folder folder;
     private RecyclerView recyclerView;
     private MailService service;
+    private boolean folderDeletable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class FolderActivity extends BaseActivity {
 
         Bundle extras = getIntent().getExtras();
         int folderId = extras.getInt("FolderId");
+        folderDeletable = extras.getBoolean("FolderDeletable");
         folder = db.folderDao().findById(folderId);
         Objects.requireNonNull(getSupportActionBar()).setTitle(folder.name);
 
@@ -96,6 +98,10 @@ public class FolderActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.folder_options_menu, menu);
+        if(!folderDeletable){
+            MenuItem item = menu.findItem(R.id.menu_delete_folder);
+            item.setVisible(false);
+        }
         return true;
     }
 

@@ -36,6 +36,9 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE `from` LIKE :from LIMIT 1")
     Message findByFrom(String from);
 
+    @Query("SELECT COUNT(id) FROM message WHERE folderId = :folderId")
+    int countByFolderId(int folderId);
+
     @Insert
     void insertAll(Message... folders);
 

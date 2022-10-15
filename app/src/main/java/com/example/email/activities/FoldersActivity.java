@@ -25,7 +25,7 @@ import java.util.Objects;
 public class FoldersActivity extends BaseActivity {
     private MailDatabase db;
     private RecyclerView recyclerView;
-    private List<FolderWithMessages> folders = new ArrayList<>();
+    private List<Folder> folders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +69,17 @@ public class FoldersActivity extends BaseActivity {
     }
 
     private void fillData(){
-        folders = db.folderDao().getFoldersWithMessages();
+        folders = db.folderDao().getAll();
         FolderListAdapter folderListAdapter = new FolderListAdapter(folders);
 
         recyclerView.setAdapter(folderListAdapter);
 
         folderListAdapter.setOnItemClickListener(position -> {
-            FolderWithMessages folderWithMessages = folders.get(position);
+            Folder folder = folders.get(position);
             Intent intent = new Intent(getApplicationContext(), FolderActivity.class);
-            intent.putExtra("FolderId", folderWithMessages.folder.id);
+            intent.putExtra("FolderId", folder.id);
+            boolean visibleDelete = position > 7;
+            intent.putExtra("FolderDeletable", visibleDelete);
             startActivity(intent);
         });
     }
