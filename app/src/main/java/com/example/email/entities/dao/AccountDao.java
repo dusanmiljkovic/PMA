@@ -5,10 +5,12 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import com.example.email.entities.Account;
 import com.example.email.entities.AccountWithContacts;
 import com.example.email.entities.AccountWithMessages;
+import com.example.email.entities.Folder;
 
 import java.util.List;
 
@@ -32,6 +34,9 @@ public interface AccountDao {
 
     @Delete
     void delete(Account account);
+
+    @Update
+    int updateAccount(Account account);
 
     @Transaction
     @Query("SELECT * FROM account")

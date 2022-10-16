@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable-v24/ic_baseline_edit_24.xml" value="0.137" />
         <entry key="app/src/main/res/drawable-v24/ic_baseline_person_add_alt_1_24.xml" value="0.1595" />
         <entry key="app/src/main/res/drawable/circular_image_border.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/edit_text_selector.xml" value="0.1915" />
         <entry key="app/src/main/res/drawable/ic_baseline_reply_all_24.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.176" />
@@ -23,7 +24,7 @@
         <entry key="app/src/main/res/layout/activity_folder.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/activity_folders.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1671875" />
-        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.15932117527862208" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.26759906834502833" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1671875" />
         <entry key="app/src/main/res/layout/activity_update_folder.xml" value="0.1" />

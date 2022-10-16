@@ -47,21 +47,15 @@ public class ContactActivity extends BaseActivity {
         bCancel = findViewById(R.id.contact_cancel_button);
         bSave = findViewById(R.id.contact_save_button);
 
-        bCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                bCancel.setVisibility(View.INVISIBLE);
-                bSave.setVisibility(View.INVISIBLE);
-                contactFirstName.setEnabled(false);
-                contactLastName.setEnabled(false);
-                contactEmail.setEnabled(false);
-            }
+        bCancel.setOnClickListener(view -> {
+            bCancel.setVisibility(View.INVISIBLE);
+            bSave.setVisibility(View.INVISIBLE);
+            contactFirstName.setEnabled(false);
+            contactLastName.setEnabled(false);
+            contactEmail.setEnabled(false);
         });
 
-        bSave.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                updateContact();
-            }
-        });
+        bSave.setOnClickListener(view -> updateContact());
 
         contactFirstName.setText(extras.getString("FirstName"), TextInputEditText.BufferType.EDITABLE);
         contactLastName.setText(extras.getString("LastName"), TextInputEditText.BufferType.EDITABLE);

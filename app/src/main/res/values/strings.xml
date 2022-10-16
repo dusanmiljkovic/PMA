@@ -64,4 +64,11 @@
     <string name="contact_menu_edit_contact">Edit contact</string>
     <string name="settings_sort_messages_ascending">Sort messages ascending</string>
     <string name="email_sender_icon">Email sender icon</string>
+    <string name="profile_email">johndoe@gmail.com</string>
+    <string name="profile_email_label"><b>Email</b></string>
+    <string name="profile_display_name_label"><b>Display name</b></string>
+    <string name="profile_display_name">John Doe</string>
+    <string name="profile_edit_button">Edit</string>
+    <string name="profile_save_button">Save</string>
+    <string name="profile_cancel_button">Cancel</string>
 </resources>

@@ -33,17 +33,11 @@ public class CreateFolderActivity extends BaseActivity {
         bCancel = findViewById(R.id.new_folder_cancel_button);
         tFolderName = findViewById(R.id.new_folder_name);
 
-        bCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        bCancel.setOnClickListener(view -> finish());
 
-        bSaveFolder.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                CreateFolderAsyncTask createFolderAsyncTask = new CreateFolderAsyncTask();
-                createFolderAsyncTask.execute();
-            }
+        bSaveFolder.setOnClickListener(view -> {
+            CreateFolderAsyncTask createFolderAsyncTask = new CreateFolderAsyncTask();
+            createFolderAsyncTask.execute();
         });
 
         if(getSupportActionBar() != null) {

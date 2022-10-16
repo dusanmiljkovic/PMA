@@ -38,16 +38,8 @@ public class CreateContactActivity extends BaseActivity {
             email = findViewById(R.id.create_contact_email);
             cancelButton = findViewById(R.id.create_contact_cancel_button);
             saveButton = findViewById(R.id.create_contact_save_button);
-            cancelButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    saveContact();
-                }
-            });
+            cancelButton.setOnClickListener(view -> finish());
+            saveButton.setOnClickListener(view -> saveContact());
         } catch (Exception e){
             String er = e.toString();
         }

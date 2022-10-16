@@ -34,7 +34,7 @@ public interface FolderDao {
     void insertAll(Folder... folders);
 
     @Update
-    Integer updateFolder(Folder folder);
+    int updateFolder(Folder folder);
 
     @Delete
     void delete(Folder folder);

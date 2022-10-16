@@ -32,17 +32,11 @@ public class UpdateFolderActivity extends BaseActivity {
 
         intiData();
 
-        bCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        bCancel.setOnClickListener(view -> finish());
 
-        bSaveFolder.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                UpdateFolderAsyncTask createFolderAsyncTask = new UpdateFolderAsyncTask();
-                createFolderAsyncTask.execute();
-            }
+        bSaveFolder.setOnClickListener(view -> {
+            UpdateFolderAsyncTask createFolderAsyncTask = new UpdateFolderAsyncTask();
+            createFolderAsyncTask.execute();
         });
 
         if(getSupportActionBar() != null) {
