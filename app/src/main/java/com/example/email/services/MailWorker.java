@@ -10,20 +10,24 @@ import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
 import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
+import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.QPDecoderStream;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.mail.Flags;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 
 public class MailWorker extends Worker {
     private final Properties properties = System.getProperties();
@@ -93,33 +97,59 @@ public class MailWorker extends Worker {
             for (javax.mail.Folder folder : emailFolders) {
                 String folderName = folder.getName();
 
-                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
-                    folder.open(javax.mail.Folder.READ_ONLY);
-                    javax.mail.Message[] emailMessages = folder.getMessages();
-                    for (javax.mail.Message msg : emailMessages) {
-                        try {
-                            if (db.messageDao().findByMessageNumber(msg.getMessageNumber()) == null) {
-                                int folderFromDb = db.folderDao().findByName(folderName).id;
+                String[] attributes = ((IMAPFolder) folder).getAttributes();
+                for (String attr : attributes) {
+                    if (attr.toLowerCase().contains("sent")){
+                        for (javax.mail.Message msg : folder.getMessages()) {
+                            try {
+                                int folderFromDb = db.folderDao().findByName("Sent Mail").id;
                                 Message message = new Message();
                                 message.messageNumber = msg.getMessageNumber();
                                 message.setReceivedDate(msg.getReceivedDate());
                                 message.subject = msg.getSubject();
-                                message.content = getText(msg);
+                                message.content = getText(msg)[0];
                                 message.textIsHtml = textIsHtml;
                                 message.from = InternetAddress.toString(msg.getFrom());
                                 message.to = InternetAddress.toString(msg.getRecipients(javax.mail.Message.RecipientType.TO));
                                 message.folderId = folderFromDb;
                                 message.accountId = account.id;
                                 db.messageDao().insertAll(message);
+                            } catch (IOException e) {
+                                System.out.println("An error occurred while getting message.");
+                                e.printStackTrace();
                             }
+                        }
+                    } else {
+                        if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
+                            folder.open(javax.mail.Folder.READ_ONLY);
+                            javax.mail.Message[] emailMessages = folder.getMessages();
+                            for (javax.mail.Message msg : emailMessages) {
+                                try {
+                                    if (db.messageDao().findByMessageNumber(msg.getMessageNumber()) == null) {
+                                        int folderFromDb = db.folderDao().findByName(folderName).id;
+                                        Message message = new Message();
+                                        message.messageNumber = msg.getMessageNumber();
+                                        message.setReceivedDate(msg.getReceivedDate());
+                                        message.subject = msg.getSubject();
+                                        message.content = getText(msg)[0];
+                                        message.textIsHtml = textIsHtml;
+                                        message.from = InternetAddress.toString(msg.getFrom());
+                                        message.to = InternetAddress.toString(msg.getRecipients(javax.mail.Message.RecipientType.TO));
+                                        message.folderId = folderFromDb;
+                                        message.accountId = account.id;
+                                        db.messageDao().insertAll(message);
 
-                        } catch (IOException e) {
-                            System.out.println("An error occurred while getting message.");
-                            e.printStackTrace();
+
+                                    }
+
+                                } catch (IOException e) {
+                                    System.out.println("An error occurred while getting message.");
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
                 }
-
             }
         }
         catch (MessagingException e) {
@@ -131,12 +161,12 @@ public class MailWorker extends Worker {
     /**
      * Return the primary text content of the message.
      */
-    private String getText(Part p) throws MessagingException, IOException {
+    private String[] getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             if (p.getContent() instanceof String) {
                 String s = (String)p.getContent();
                 textIsHtml = p.isMimeType("text/html");
-                return s;
+                return new String[]{s, ""};
             } else if (p.getContent() instanceof QPDecoderStream) {
                 BufferedInputStream bis = new BufferedInputStream((InputStream) p.getContent());
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -149,12 +179,11 @@ public class MailWorker extends Worker {
                 }
                 String s = baos.toString();
                 textIsHtml = p.isMimeType("text/html");
-                return s;
+                return new String[]{s, ""};
             }
             else {
-                return "";
+                return new String[]{"", ""};
             }
-
         }
         if (p.isMimeType("multipart/alternative")) {
         // prefer html text over plain text
@@ -164,25 +193,51 @@ public class MailWorker extends Worker {
                 Part bp = mp.getBodyPart(i);
                 if (bp.isMimeType("text/plain")) {
                     if (text == null)
-                        text = getText(bp);
+                        text = getText(bp)[0];
                     continue;
                 } else if (bp.isMimeType("text/html")) {
-                    String s = getText(bp);
+                    String s = getText(bp)[0];
                     if (s != null)
-                        return s;
+                        return new String[]{s, ""};
                 } else {
                     return getText(bp);
                 }
             }
-            return text;
-        } else if (p.isMimeType("multipart/*")) {
+            return new String[]{text, ""};
+        }
+        else if (p.isMimeType("multipart/*")) {
             Multipart mp = (Multipart)p.getContent();
-            for (int i = 0; i < mp.getCount(); i++) {
-                String s = getText(mp.getBodyPart(i));
-                if (s != null)
-                    return s;
+            int numberOfParts = mp.getCount();
+            // store attachment file name, separated by comma
+            String attachFiles = "";
+            String messageContent = "";
+            for (int partCount = 0; partCount < numberOfParts; partCount++) {
+                MimeBodyPart part = (MimeBodyPart) mp.getBodyPart(partCount);
+                if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
+                    // this part is attachment
+                    String fileName = part.getFileName();
+                    attachFiles += fileName + ", ";
+                    part.saveFile(saveDirectory + File.separator + fileName);
+                } else {
+                    messageContent = part.getContent().toString();
+                }
             }
+
+            if (attachFiles.length() > 1) {
+                attachFiles = attachFiles.substring(0, attachFiles.length() - 2);
+            }
+            return new String[]{messageContent, attachFiles};
         }
         return null;
+    }
+
+    private String saveDirectory;
+
+    /**
+     * Sets the directory where attached files will be stored.
+     * @param dir absolute path of the directory
+     */
+    public void setSaveDirectory(String dir) {
+        this.saveDirectory = dir;
     }
 }
