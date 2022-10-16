@@ -1,8 +1,6 @@
 package com.example.email.services;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
@@ -15,7 +13,6 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -63,23 +60,20 @@ public class MailService {
             }
             com.example.email.entities.Message message = db.messageDao().findByMessageNumber(mailId);
             com.example.email.entities.Folder messageFolder = db.folderDao().findById(message.folderId);
-            javax.mail.Folder folder = store.getFolder(messageFolder.name);
-            if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
-                folder.open(Folder.READ_WRITE);
-                try {
-                    Message msg = folder.getMessage(mailId);
-                    if (msg != null) {
-                        msg.setFlag(Flags.Flag.DELETED, true);
-                        folder.close(true);
-                    }
-                }catch (Exception ignored){
+            javax.mail.Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_WRITE);
+            try {
+                Message msg = folder.getMessage(mailId);
+                if (msg != null) {
+                    msg.setFlag(Flags.Flag.DELETED, true);
+                    folder.close(true);
                 }
-                db.messageDao().delete(message);
+            }catch (Exception ignored){
             }
+            db.messageDao().delete(message);
         } catch (MessagingException e) {
             System.out.println("An error occurred while deleting an email.");
             e.printStackTrace();
-
         }
     }
 
