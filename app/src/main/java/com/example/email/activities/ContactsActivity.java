@@ -40,6 +40,21 @@ public class ContactsActivity extends BaseActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        fillData();
+    }
+
+    private void initContacts() {
+        contacts = db.contactDao().getAll();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        initContacts();
+        fillData();
+    }
+    private void fillData(){
         contactListAdapter = new ContactListAdapter(contacts);
         recyclerView.setAdapter(contactListAdapter);
         contactListAdapter.setOnItemClickListener(position -> {
@@ -52,11 +67,6 @@ public class ContactsActivity extends BaseActivity {
             startActivity(intent);
         });
     }
-
-    private void initContacts() {
-        contacts = db.contactDao().getAll();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
