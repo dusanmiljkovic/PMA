@@ -68,8 +68,6 @@ public class ProfileActivity extends BaseActivity {
             etDisplayName.setText(account.displayName);
             etDisplayName.setEnabled(false);
         });
-
-
     }
 
     private void initData(){

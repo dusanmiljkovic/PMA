@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +36,8 @@ public class FolderActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private MailService service;
     private boolean folderDeletable;
+    private EmailListAdapter emailListAdapter;
+    boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class FolderActivity extends BaseActivity {
             getSupportActionBar().hide();
         }
         initToolbar();
+        initScrollListener();
         fillData();
     }
 
@@ -74,9 +78,9 @@ public class FolderActivity extends BaseActivity {
     }
 
     private void fillData() {
-        messages = db.messageDao().loadAllByFolderId(folder.id, sortAscending);
+        messages = db.messageDao().loadNextByFolderId(folder.id, sortAscending, 0, 10);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        EmailListAdapter emailListAdapter = new EmailListAdapter(messages);
+        emailListAdapter = new EmailListAdapter(messages);
         recyclerView.setAdapter(emailListAdapter);
 
         emailListAdapter.setOnItemClickListener(position -> {
@@ -156,5 +160,49 @@ public class FolderActivity extends BaseActivity {
         protected void onProgressUpdate(String... text) {
 //            Toast.makeText(getApplicationContext(), "Deleting message", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void initScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == messages.size() - 1) {
+                        //bottom of list!
+                        loadMore();
+                        isLoading = true;
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadMore() {
+        messages.add(null);
+        emailListAdapter.notifyItemInserted(messages.size() - 1);
+
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            messages.remove(messages.size() - 1);
+            int currentSize = messages.size();
+            emailListAdapter.notifyItemRemoved(currentSize);
+
+            List<Message> messagesToAdd = db.messageDao().loadNextByFolderId(folder.id ,sortAscending, currentSize, 10);
+            messages.addAll(messagesToAdd);
+
+
+            emailListAdapter.notifyDataSetChanged();
+            isLoading = false;
+        }, 2000);
     }
 }
