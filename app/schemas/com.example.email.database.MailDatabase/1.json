@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8705c13503129c05ddca9e27cd9372f8",
+    "identityHash": "69f79b9c3d51701ce51708a29e11b056",
     "entities": [
       {
         "tableName": "Folder",
@@ -112,7 +112,7 @@
       },
       {
         "tableName": "Account",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `smtp` TEXT, `pop_imap` TEXT, `username` TEXT, `password` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `smtp` TEXT, `pop_imap` TEXT, `display_name` TEXT, `username` TEXT, `password` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -129,6 +129,12 @@
           {
             "fieldPath": "popImap",
             "columnName": "pop_imap",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "display_name",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -214,7 +220,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8705c13503129c05ddca9e27cd9372f8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '69f79b9c3d51701ce51708a29e11b056')"
     ]
   }
 }

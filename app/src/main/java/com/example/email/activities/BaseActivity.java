@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -54,6 +56,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         super.setContentView(drawerLayout);
         initToolbar();
         initNavigation();
+        setNavigationText();
     }
 
     private void initToolbar() {
@@ -69,6 +72,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setNavigationText(){
+        Account account = db.accountDao().getLast();
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.username);
+        navUsername.setText(account.username);
+        TextView navDisplayName = (TextView) headerView.findViewById(R.id.displayName);
+        navDisplayName.setText(account.displayName);
     }
 
     @SuppressLint("NonConstantResourceId")

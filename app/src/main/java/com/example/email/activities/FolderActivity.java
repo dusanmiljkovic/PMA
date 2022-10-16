@@ -77,13 +77,14 @@ public class FolderActivity extends BaseActivity {
         messages = db.messageDao().loadAllByFolderId(folder.id, sortAscending);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         EmailListAdapter emailListAdapter = new EmailListAdapter(messages);
+        recyclerView.setAdapter(emailListAdapter);
+
         emailListAdapter.setOnItemClickListener(position -> {
             Message message = messages.get(position);
             Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
             intent.putExtra("MessageId", message.id);
             startActivity(intent);
         });
-        recyclerView.setAdapter(emailListAdapter);
     }
 
     @Override

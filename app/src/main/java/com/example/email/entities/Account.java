@@ -15,6 +15,9 @@ public class Account {
     @ColumnInfo(name = "pop_imap")
     public String popImap;
 
+    @ColumnInfo(name = "display_name")
+    public String displayName;
+
     @ColumnInfo(name = "username")
     public String username;
 
