@@ -10,12 +10,17 @@ import com.example.email.entities.Account;
 import java.util.Objects;
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class MailService {
     private final Properties properties = System.getProperties();
@@ -118,6 +123,67 @@ public class MailService {
             db.folderDao().delete(folder);
         } catch (MessagingException e) {
             System.out.println("An error occurred while updating a folder.");
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMail(com.example.email.entities.Message message) {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.socketFactory.port", "465");
+        properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "465");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(account.username, account.password);
+            }
+        });
+
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(account.username));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.to));
+//            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(message.cc));
+//            msg.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(message.cc));
+            msg.setSubject(message.subject);
+            msg.setText(message.content);
+            Transport.send(msg);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveMessage(com.example.email.entities.Message message) {
+        try {
+            Session session = Session.getDefaultInstance(properties, null);
+            Store store = session.getStore("imaps");
+            store.connect("imap.gmail.com", account.username, account.password);
+
+            Folder draftsMailBoxFolder = store.getFolder("Drafts");//[Gmail]/Drafts
+            if (draftsMailBoxFolder.exists()) {
+                draftsMailBoxFolder.open(Folder.READ_WRITE);
+                MimeMessage draftMessage = new MimeMessage(session);
+                draftMessage.setFrom(new InternetAddress(account.username));
+                if (message.to != "")
+                    draftMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.to));
+                if (message.subject != "")
+                    draftMessage.setSubject(message.subject);
+                if (message.content != "")
+                    draftMessage.setText(message.content);
+                draftMessage.setFlag(Flags.Flag.DRAFT, true);
+                MimeMessage []draftMessages = {draftMessage};
+                draftsMailBoxFolder.appendMessages(draftMessages);
+
+                com.example.email.entities.Folder folder = db.folderDao().findByName("Drafts");
+                message.folderId = folder.id;
+
+                db.messageDao().insertAll(message);
+            }
+        }catch (MessagingException e){
+            System.out.println("An error occurred while saving a mail to drafts.");
             e.printStackTrace();
         }
     }

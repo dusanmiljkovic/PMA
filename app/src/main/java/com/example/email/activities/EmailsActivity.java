@@ -153,7 +153,11 @@ public class EmailsActivity extends BaseActivity {
     }
 
     private void addListenerForCreatingEmails(){
-        createEmailButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), CreateEmailActivity.class)));
+        createEmailButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), CreateEmailActivity.class);
+            intent.putExtra("MessageId", -1);
+            startActivity(intent);
+        });
     }
 
     private void addWorker(){

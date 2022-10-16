@@ -62,30 +62,32 @@ public class CreateFolderActivity extends BaseActivity {
         private String resp;
 
         @Override
-        protected String doInBackground(String... params) {
-            try {
-                service.createFolder(tFolderName.getText().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                resp = e.getMessage();
-            }
-            return resp;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(getApplicationContext(), "Created", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        @Override
         protected void onPreExecute() {
             Toast.makeText(getApplicationContext(), "Creating folder", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        protected void onProgressUpdate(String... text) {
-//            Toast.makeText(getApplicationContext(), "Deleting message", Toast.LENGTH_SHORT).show();
+        protected String doInBackground(String... params) {
+            try {
+                service.createFolder(tFolderName.getText().toString());
+                return "Success";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Fail";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("Success")) {
+                Toast.makeText(getApplicationContext(), "Created", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(),"Something went wrong", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 
