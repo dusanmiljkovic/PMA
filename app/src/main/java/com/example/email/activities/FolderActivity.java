@@ -85,9 +85,15 @@ public class FolderActivity extends BaseActivity {
 
         emailListAdapter.setOnItemClickListener(position -> {
             Message message = messages.get(position);
-            Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-            intent.putExtra("MessageId", message.id);
-            startActivity(intent);
+            if (!Objects.equals(folder.name, "Drafts")) {
+                Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
+                intent.putExtra("MessageId", message.id);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(getApplicationContext(), CreateEmailActivity.class);
+                intent.putExtra("MessageId", message.id);
+                startActivity(intent);
+            }
         });
     }
 
@@ -176,7 +182,8 @@ public class FolderActivity extends BaseActivity {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                 if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == messages.size() - 1) {
+                    List<Message> nextMessages =  db.messageDao().loadNextByFolderId(folder.id, sortAscending, messages.size(), 10);
+                    if (!nextMessages.isEmpty() && linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == messages.size() - 1) {
                         //bottom of list!
                         loadMore();
                         isLoading = true;

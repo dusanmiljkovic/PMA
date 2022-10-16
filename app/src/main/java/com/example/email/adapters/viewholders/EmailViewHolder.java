@@ -11,6 +11,8 @@ import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.entities.Message;
 
+import java.util.Objects;
+
 public class EmailViewHolder extends RecyclerView.ViewHolder {
 
     private final ImageView senderImage;
@@ -39,10 +41,14 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Message message) {
         senderImage.setBackgroundResource(R.mipmap.ic_launcher);
-        tSender.setText(message.from.split(" <")[0]);
-        tSubject.setText(message.subject);
-        tContent.setText(message.content);
-        tDateTime.setText(message.getReceivedDateString());
+        if (message.from != null)
+            tSender.setText(message.from.split(" <")[0]);
+        if (message.subject != null)
+            tSubject.setText(message.subject);
+        if (message.content != null)
+            tContent.setText(message.content);
+        if (message.receivedDate != null)
+            tDateTime.setText(message.getReceivedDateString());
     }
 
 }

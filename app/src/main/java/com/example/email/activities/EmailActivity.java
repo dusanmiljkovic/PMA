@@ -102,7 +102,7 @@ public class EmailActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Save clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_delete:
-                AsyncTaskRunner runner = new AsyncTaskRunner();
+                DeleteMail runner = new DeleteMail();
                 runner.execute();
 //                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 break;
@@ -119,28 +119,10 @@ public class EmailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+    private class DeleteMail extends AsyncTask<String, String, String> {
 
         private String resp;
 
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                service.deleteMail(message.messageNumber);
-            } catch (Exception e) {
-                e.printStackTrace();
-                resp = e.getMessage();
-            }
-            return resp;
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            // execution of result of Long time consuming operation
-            Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
 
         @Override
@@ -148,10 +130,26 @@ public class EmailActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), "Deleting message", Toast.LENGTH_SHORT).show();
         }
 
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                service.deleteMail(message.messageNumber);
+                return "Success";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Fail";
+            }
+        }
+
 
         @Override
-        protected void onProgressUpdate(String... text) {
-//            Toast.makeText(getApplicationContext(), "Deleting message", Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(String result) {
+            if (Objects.equals(result, "Success")) {
+                Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

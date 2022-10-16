@@ -1,8 +1,6 @@
 package com.example.email.services;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
@@ -10,17 +8,25 @@ import com.example.email.entities.Account;
 import java.util.Objects;
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class MailService {
     private final Properties properties = System.getProperties();
     private final MailDatabase db;
     private Account account;
+    private Session session;
+    private Store store;
+
 
     public MailService(Context context){
         db = MailDatabase.getDbInstance(context);
@@ -29,38 +35,56 @@ public class MailService {
         properties.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.setProperty("mail.imaps.socketFactory.fallback", "false");
         account = db.accountDao().getLast();
+        connect();
+    }
+
+    private void connect(){
+        try {
+            if (store == null) {
+                session = Session.getDefaultInstance(properties, null);
+                store = session.getStore("imaps");
+                store.connect("imap.gmail.com", account.username, account.password);
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteMail(int mailId) {
         try {
-            Session session = Session.getDefaultInstance(properties, null);
-            Store store = session.getStore("imaps");
-            store.connect("imap.gmail.com", account.username, account.password);
-
-            javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
-            for (javax.mail.Folder folder : emailFolders) {
-                if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
-                    folder.open(Folder.READ_WRITE);
-                    Message msg = folder.getMessage(mailId);
+            if (!store.isConnected())
+            {
+                session = Session.getDefaultInstance(properties, null);
+                store = session.getStore("imaps");
+                store.connect("imap.gmail.com", account.username, account.password);
+            }
+            com.example.email.entities.Message message = db.messageDao().findByMessageNumber(mailId);
+            com.example.email.entities.Folder messageFolder = db.folderDao().findById(message.folderId);
+            javax.mail.Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_WRITE);
+            try {
+                Message msg = folder.getMessage(mailId);
+                if (msg != null) {
                     msg.setFlag(Flags.Flag.DELETED, true);
                     folder.close(true);
-                    com.example.email.entities.Message message = db.messageDao().findByMessageNumber(mailId);
-                    db.messageDao().delete(message);
                 }
+            }catch (Exception ignored){
             }
+            db.messageDao().delete(message);
         } catch (MessagingException e) {
             System.out.println("An error occurred while deleting an email.");
             e.printStackTrace();
-
         }
     }
 
     public void createFolder(String folderName) {
         try {
-            Session session = Session.getDefaultInstance(properties, null);
-            Store store = session.getStore("imaps");
-            store.connect("imap.gmail.com", account.username, account.password);
-
+            if (!store.isConnected())
+            {
+                session = Session.getDefaultInstance(properties, null);
+                store = session.getStore("imaps");
+                store.connect("imap.gmail.com", account.username, account.password);
+            }
             Folder someFolder = store.getFolder(folderName);
             if (!someFolder.exists()) {
                 if (someFolder.create(Folder.HOLDS_MESSAGES)) {
@@ -84,10 +108,12 @@ public class MailService {
             if(Objects.equals(folderName, oldFolderName))
                 return;
 
-            Session session = Session.getDefaultInstance(properties, null);
-            Store store = session.getStore("imaps");
-            store.connect("imap.gmail.com", account.username, account.password);
-
+            if (!store.isConnected())
+            {
+                session = Session.getDefaultInstance(properties, null);
+                store = session.getStore("imaps");
+                store.connect("imap.gmail.com", account.username, account.password);
+            }
             Folder someFolder = store.getFolder(oldFolderName);
             if (someFolder.exists()) {
                 Folder newFolder = store.getFolder(folderName);
@@ -106,10 +132,12 @@ public class MailService {
 
     public void deleteFolder(int folderId) {
         try {
-            Session session = Session.getDefaultInstance(properties, null);
-            Store store = session.getStore("imaps");
-            store.connect("imap.gmail.com", account.username, account.password);
-
+            if (!store.isConnected())
+            {
+                session = Session.getDefaultInstance(properties, null);
+                store = session.getStore("imaps");
+                store.connect("imap.gmail.com", account.username, account.password);
+            }
             com.example.email.entities.Folder folder = db.folderDao().findById(folderId);
             Folder someFolder = store.getFolder(folder.name);
             if (someFolder.exists()) {
@@ -118,6 +146,69 @@ public class MailService {
             db.folderDao().delete(folder);
         } catch (MessagingException e) {
             System.out.println("An error occurred while updating a folder.");
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMail(com.example.email.entities.Message message) {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.socketFactory.port", "465");
+        properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "465");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(account.username, account.password);
+            }
+        });
+
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(account.username));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.to));
+//            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(message.cc));
+//            msg.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(message.cc));
+            msg.setSubject(message.subject);
+            msg.setText(message.content);
+            Transport.send(msg);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveMessage(com.example.email.entities.Message message) {
+        try {
+            if (!store.isConnected())
+            {
+                session = Session.getDefaultInstance(properties, null);
+                store = session.getStore("imaps");
+                store.connect("imap.gmail.com", account.username, account.password);
+            }
+            Folder draftsMailBoxFolder = store.getFolder("Drafts");//[Gmail]/Drafts
+            if (draftsMailBoxFolder.exists()) {
+                draftsMailBoxFolder.open(Folder.READ_WRITE);
+                MimeMessage draftMessage = new MimeMessage(session);
+                draftMessage.setFrom(new InternetAddress(account.username));
+                if (message.to != "")
+                    draftMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.to));
+                if (message.subject != "")
+                    draftMessage.setSubject(message.subject);
+                if (message.content != "")
+                    draftMessage.setText(message.content);
+                draftMessage.setFlag(Flags.Flag.DRAFT, true);
+                MimeMessage []draftMessages = {draftMessage};
+                draftsMailBoxFolder.appendMessages(draftMessages);
+
+                com.example.email.entities.Folder folder = db.folderDao().findByName("Drafts");
+                message.folderId = folder.id;
+
+                db.messageDao().insertAll(message);
+            }
+        }catch (MessagingException e){
+            System.out.println("An error occurred while saving a mail to drafts.");
             e.printStackTrace();
         }
     }
