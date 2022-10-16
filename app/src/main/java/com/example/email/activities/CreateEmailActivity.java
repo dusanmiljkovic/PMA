@@ -82,8 +82,8 @@ public class CreateEmailActivity extends BaseActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> {
             if (!emailTo.getText().toString().isEmpty()
-                    || !emailCc.getText().toString().isEmpty()
-                    || !emailBcc.getText().toString().isEmpty()
+//                    || !emailCc.getText().toString().isEmpty()
+//                    || !emailBcc.getText().toString().isEmpty()
                     || !emailSubject.getText().toString().isEmpty()
                     || !emailContent.getText().toString().isEmpty()
             )

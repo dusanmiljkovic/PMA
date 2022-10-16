@@ -57,6 +57,17 @@ public class EmailsActivity extends BaseActivity {
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        initEmails();
+        initAdapter();
+        initScrollListener();
+        initClickListener();
+        addListenerForCreatingEmails();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.emails_options_menu, menu);
