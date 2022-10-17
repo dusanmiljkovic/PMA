@@ -16,6 +16,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -24,6 +25,7 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeUtility;
 
 public class MailWorker extends Worker {
     private final Properties properties = System.getProperties();
@@ -53,6 +55,7 @@ public class MailWorker extends Worker {
         properties.put("mail.imaps.port", "993");
         properties.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.setProperty("mail.imaps.socketFactory.fallback", "false");
+        properties.setProperty("mail.mime.charset", "utf-8");
         account = db.accountDao().getLast();
     }
 
@@ -106,8 +109,9 @@ public class MailWorker extends Worker {
                                 message.subject = msg.getSubject();
                                 message.content = getText(msg);
                                 message.textIsHtml = textIsHtml;
-                                message.from = InternetAddress.toString(msg.getFrom());
-                                message.to = InternetAddress.toString(msg.getRecipients(javax.mail.Message.RecipientType.TO));
+                                String from = MimeUtility.decodeText(msg.getFrom()[0].toString().replaceAll("\"", ""));
+                                message.from = from;
+                                message.to = Arrays.toString(msg.getRecipients(javax.mail.Message.RecipientType.TO));
                                 message.folderId = folderFromDb;
                                 message.accountId = account.id;
                                 db.messageDao().insertAll(message);

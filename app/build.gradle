@@ -74,4 +74,6 @@ dependencies {
 
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+
+    implementation 'org.jsoup:jsoup:1.11.1'
 }
