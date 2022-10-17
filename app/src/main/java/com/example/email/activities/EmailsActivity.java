@@ -107,7 +107,7 @@ public class EmailsActivity extends BaseActivity {
     }
 
     private void initAdapter(){
-        emailListAdapter = new EmailListAdapter(messagesList);
+        emailListAdapter = new EmailListAdapter(messagesList, EmailsActivity.this);
         recyclerView.setAdapter(emailListAdapter);
     }
 

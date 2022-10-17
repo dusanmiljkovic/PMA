@@ -1,5 +1,6 @@
 package com.example.email.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.email.R;
 import com.example.email.adapters.viewholders.EmailViewHolder;
 import com.example.email.adapters.viewholders.LoadingViewHolder;
+import com.example.email.database.MailDatabase;
 import com.example.email.entities.Message;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final List<Message> messages;
     private final List<Message> messagesFull;
     private OnItemClickListener onItemClickListener;
+    private MailDatabase db;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -33,9 +36,10 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.onItemClickListener = onItemClickListener;
     }
 
-    public EmailListAdapter(List<Message> messages) {
+    public EmailListAdapter(List<Message> messages, Context content) {
         this.messages = messages;
         messagesFull = new ArrayList<>(messages);
+        db = MailDatabase.getDbInstance(content);
     }
 
     @NonNull
@@ -84,13 +88,15 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             List<Message> filterList = new ArrayList<>();
+            List<Message> allMails = db.messageDao().getAll(false);
+
 
             if (charSequence == null || charSequence.length() == 0) {
                 filterList.addAll(messagesFull);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
                 try {
-                    for (Message message : messagesFull) {
+                    for (Message message : allMails) {
                         if (message.subject.toLowerCase().contains(filterPattern)) {
                             filterList.add(message);
                         } else if (message.content.toLowerCase().contains(filterPattern)) {

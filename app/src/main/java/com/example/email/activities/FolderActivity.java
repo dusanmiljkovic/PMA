@@ -80,7 +80,7 @@ public class FolderActivity extends BaseActivity {
     private void fillData() {
         messages = db.messageDao().loadNextByFolderId(folder.id, sortAscending, 0, 10);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        emailListAdapter = new EmailListAdapter(messages);
+        emailListAdapter = new EmailListAdapter(messages, FolderActivity.this);
         recyclerView.setAdapter(emailListAdapter);
 
         emailListAdapter.setOnItemClickListener(position -> {
