@@ -20,6 +20,7 @@ import androidx.work.WorkManager;
 import com.example.email.R;
 import com.example.email.adapters.EmailListAdapter;
 import com.example.email.database.MailDatabase;
+import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
 import com.example.email.services.MailWorker;
 import com.example.email.utils.Constants;
@@ -45,7 +46,6 @@ public class EmailsActivity extends BaseActivity {
         setContentView(R.layout.activity_emails);
 
         initialise();
-        addWorker();
         initEmails();
         initAdapter();
 
@@ -103,8 +103,9 @@ public class EmailsActivity extends BaseActivity {
     }
 
     private void initEmails() {
-        int folderId = db.folderDao().findByName("INBOX").id;
-        messagesList = db.messageDao().loadNextByFolderId(folderId, sortAscending, 0, 10);
+        Folder folder = db.folderDao().findByName("INBOX");
+        if (folder != null)
+            messagesList = db.messageDao().loadNextByFolderId(folder.id, sortAscending, 0, 10);
     }
 
     private void initAdapter(){
@@ -170,26 +171,5 @@ public class EmailsActivity extends BaseActivity {
             intent.putExtra("MessageId", -1);
             startActivity(intent);
         });
-    }
-
-    private void addWorker(){
-
-        Constraints constraint = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .setRequiresBatteryNotLow(true)
-                .build();
-
-        PeriodicWorkRequest uploadWorkRequest = new PeriodicWorkRequest.Builder(
-                MailWorker.class,
-                30,
-                TimeUnit.MINUTES
-        )
-                .setConstraints(constraint)
-                .addTag("my_unique_worker")
-                .build();
-
-        WorkManager
-                .getInstance(EmailsActivity.this)
-                .enqueue(uploadWorkRequest);
     }
 }

@@ -34,6 +34,7 @@ public class CreateEmailActivity extends BaseActivity {
     private TextInputEditText emailContent;
     private final Message message = new Message();
     private MailService mailService;
+    private int messageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class CreateEmailActivity extends BaseActivity {
         });
         mailService = new MailService(CreateEmailActivity.this);
         Bundle extras = getIntent().getExtras();
-        int messageId = extras.getInt("MessageId", -1);
+        messageId = extras.getInt("MessageId", -1);
         if (messageId != -1){
             Message message = db.messageDao().findById(messageId);
             emailTo.setText(message.to);
@@ -101,6 +102,10 @@ public class CreateEmailActivity extends BaseActivity {
         message.content = content;
         if (!to.isEmpty() || !subject.isEmpty() || !content.isEmpty())
             new SaveMail().execute();
+        if (messageId != -1){
+            Message message = db.messageDao().findById(messageId);
+            db.messageDao().delete(message);
+        }
     }
 
     @Override
@@ -121,8 +126,8 @@ public class CreateEmailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_send) {
             String to = emailTo.getText().toString().trim();
-            String subject = emailTo.getText().toString().trim();
-            String content = emailTo.getText().toString().trim();
+            String subject = emailSubject.getText().toString().trim();
+            String content = emailContent.getText().toString().trim();
             if (to.isEmpty()){
                 Toast.makeText(getApplicationContext(),"Receiver is required", Toast.LENGTH_SHORT).show();
             }else{

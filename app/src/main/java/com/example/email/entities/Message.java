@@ -22,7 +22,7 @@ public class Message {
     public int id;
 
     @ColumnInfo(name = "message_number")
-    public int messageNumber;
+    public long messageNumber;
 
     @ColumnInfo(name = "received_date")
     public Date receivedDate;

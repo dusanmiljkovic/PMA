@@ -51,7 +51,7 @@ public class MailService {
         }
     }
 
-    public void deleteMail(int mailId) {
+    public void deleteMail(long mailId) {
         try {
             if (!store.isConnected())
             {
@@ -61,10 +61,10 @@ public class MailService {
             }
             com.example.email.entities.Message message = db.messageDao().findByMessageNumber(mailId);
             com.example.email.entities.Folder messageFolder = db.folderDao().findById(message.folderId);
-            javax.mail.Folder folder = store.getFolder("INBOX");
+            javax.mail.Folder folder = store.getFolder(messageFolder.name);
             folder.open(Folder.READ_WRITE);
             try {
-                Message msg = folder.getMessage(mailId);
+                Message msg = folder.getMessage((int)mailId);
                 if (msg != null) {
                     msg.setFlag(Flags.Flag.DELETED, true);
                     folder.close(true);
@@ -175,14 +175,6 @@ public class MailService {
             msg.setSubject(message.subject);
             msg.setText(message.content);
             Transport.send(msg);
-            Folder[] folders = store.getDefaultFolder().list("*");
-            for (Folder folder: folders) {
-                if (Objects.equals(folder.getName(), "Sent Mail")){
-                    com.example.email.entities.Folder folderInDb = db.folderDao().findByName("Sent Mail");
-                    message.folderId = folderInDb.id;
-                    db.messageDao().insertAll(message);
-                }
-            }
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -215,7 +207,10 @@ public class MailService {
                     com.example.email.entities.Folder folderInDb = db.folderDao().findByName("Drafts");
                     message.folderId = folderInDb.id;
 
-                    db.messageDao().insertAll(message);
+                    if (message.id > 0)
+                        db.messageDao().updateMessage(message);
+                    else
+                        db.messageDao().insertAll(message);
                 }
             }
         }catch (MessagingException e){

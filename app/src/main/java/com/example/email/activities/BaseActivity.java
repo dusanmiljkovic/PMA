@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.work.WorkManager;
 
 import com.example.email.R;
 import com.example.email.database.MailDatabase;
@@ -167,6 +168,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                 })
                 .show();
+
+        WorkManager workManager = WorkManager.getInstance(BaseActivity.this);
+        workManager.cancelUniqueWork("my_unique_worker");
     }
 
     private void removeLoginCredentials(){

@@ -6,14 +6,20 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.email.R;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
+import com.example.email.services.MailWorker;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
     private MailDatabase db;
@@ -39,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                 //TODO: add login functionality
                 if (true) {
                     saveLoginCredentials();
+                    addWorker();
                     startActivity(intent);
                     finish();
                     Toast.makeText(getApplicationContext(), "Welcome back " + textInputUsername.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
@@ -62,5 +69,25 @@ public class LoginActivity extends AppCompatActivity {
         account.username = username;
         account.password = password;
         db.accountDao().insertAll(account);
+    }
+
+    private void addWorker(){
+        Constraints constraint = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(true)
+                .build();
+
+        PeriodicWorkRequest uploadWorkRequest = new PeriodicWorkRequest.Builder(
+                MailWorker.class,
+                30,
+                TimeUnit.MINUTES
+        )
+                .setConstraints(constraint)
+                .addTag("my_unique_worker")
+                .build();
+
+        WorkManager
+                .getInstance(LoginActivity.this)
+                .enqueue(uploadWorkRequest);
     }
 }

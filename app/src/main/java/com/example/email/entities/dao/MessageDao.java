@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
@@ -43,7 +44,7 @@ public interface MessageDao {
     List<Message> loadNextByFolderId(int folderId, boolean isAsc, int offset, int limit);
 
     @Query("SELECT * FROM message WHERE message_number = :messageNumber")
-    Message findByMessageNumber(int messageNumber);
+    Message findByMessageNumber(long messageNumber);
 
     @Query("SELECT * FROM message WHERE `from` LIKE :from LIMIT 1")
     Message findByFrom(String from);
@@ -52,10 +53,13 @@ public interface MessageDao {
     int countByFolderId(int folderId);
 
     @Insert
-    void insertAll(Message... folders);
+    void insertAll(Message... messages);
 
     @Delete
-    void delete(Message folder);
+    void delete(Message message);
+
+    @Update
+    void updateMessage(Message message);
 
     @Query("DELETE FROM message WHERE accountId = :accountId")
     void deleteAllByAccountId(int accountId);

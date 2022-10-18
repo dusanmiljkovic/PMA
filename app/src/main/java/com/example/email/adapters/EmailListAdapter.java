@@ -14,6 +14,7 @@ import com.example.email.R;
 import com.example.email.adapters.viewholders.EmailViewHolder;
 import com.example.email.adapters.viewholders.LoadingViewHolder;
 import com.example.email.database.MailDatabase;
+import com.example.email.entities.Folder;
 import com.example.email.entities.Message;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int VIEW_TYPE_LOADING = 1;
     private final List<Message> messages;
     private final List<Message> messagesFull;
+    private final List<Message> allMails;
     private OnItemClickListener onItemClickListener;
     private MailDatabase db;
 
@@ -40,6 +42,9 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.messages = messages;
         messagesFull = new ArrayList<>(messages);
         db = MailDatabase.getDbInstance(content);
+        Folder folder = db.folderDao().findByName("Inbox");
+        int folderId = folder != null ? folder.id : -1;
+        allMails = db.messageDao().loadAllByFolderId(folderId, false);
     }
 
     @NonNull
@@ -88,8 +93,6 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             List<Message> filterList = new ArrayList<>();
-            List<Message> allMails = db.messageDao().getAll(false);
-
 
             if (charSequence == null || charSequence.length() == 0) {
                 filterList.addAll(messagesFull);

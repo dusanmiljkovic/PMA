@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -24,6 +25,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
 
@@ -94,17 +96,18 @@ public class MailWorker extends Worker {
             javax.mail.Folder[] emailFolders = store.getDefaultFolder().list("*");
 
             for (javax.mail.Folder folder : emailFolders) {
+                UIDFolder uFolder = (UIDFolder)folder;
                 String folderName = folder.getName();
-
                 if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
                     folder.open(javax.mail.Folder.READ_ONLY);
                     javax.mail.Message[] emailMessages = folder.getMessages();
                     for (javax.mail.Message msg : emailMessages) {
+                        long messageId = uFolder.getUID(msg);
                         try {
-                            if (db.messageDao().findByMessageNumber(msg.getMessageNumber()) == null) {
+                            if (db.messageDao().findByMessageNumber(messageId) == null) {
                                 int folderFromDb = db.folderDao().findByName(folderName).id;
                                 Message message = new Message();
-                                message.messageNumber = msg.getMessageNumber();
+                                message.messageNumber = messageId;
                                 message.setReceivedDate(msg.getReceivedDate());
                                 message.subject = msg.getSubject();
                                 message.content = getText(msg);
@@ -123,7 +126,6 @@ public class MailWorker extends Worker {
                         }
                     }
                 }
-
             }
         }
         catch (MessagingException e) {
