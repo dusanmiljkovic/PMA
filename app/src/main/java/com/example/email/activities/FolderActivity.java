@@ -159,7 +159,7 @@ public class FolderActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            Toast.makeText(getApplicationContext(), "Delte folder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Delete folder", Toast.LENGTH_SHORT).show();
         }
 
         @Override
