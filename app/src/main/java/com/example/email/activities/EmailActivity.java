@@ -76,7 +76,7 @@ public class EmailActivity extends BaseActivity {
         tEmailContent.getSettings().setDomStorageEnabled(true);
         WebSettings settings = tEmailContent.getSettings();
         settings.setDefaultTextEncodingName("utf-8");
-        if (message.textIsHtml) {
+        if (message.textIsHtml || message.content.contains("<!doctype html>")) {
             tEmailContent.loadDataWithBaseURL("", message.content, "text/html; charset=utf-8", "utf-8", null);
         }
         else {
@@ -110,7 +110,6 @@ public class EmailActivity extends BaseActivity {
             case R.id.menu_delete:
                 DeleteMail runner = new DeleteMail();
                 runner.execute();
-//                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_reply:
                 Toast.makeText(getApplicationContext(), "Reply clicked", Toast.LENGTH_SHORT).show();

@@ -103,7 +103,8 @@ public class EmailsActivity extends BaseActivity {
     }
 
     private void initEmails() {
-        messagesList = db.messageDao().getNext(sortAscending, 0, 10); //TODO: LIMIT
+        int folderId = db.folderDao().findByName("INBOX").id;
+        messagesList = db.messageDao().loadNextByFolderId(folderId, sortAscending, 0, 10);
     }
 
     private void initAdapter(){
@@ -154,8 +155,8 @@ public class EmailsActivity extends BaseActivity {
             messagesList.remove(messagesList.size() - 1);
             int scrollPosition = messagesList.size();
             emailListAdapter.notifyItemRemoved(scrollPosition);
-
-            List<Message> messagesToAdd = db.messageDao().getNext(sortAscending, scrollPosition, 10);
+            int folderId = db.folderDao().findByName("INBOX").id;
+            List<Message> messagesToAdd = db.messageDao().loadNextByFolderId(folderId, sortAscending, scrollPosition, 10);
             messagesList.addAll(messagesToAdd);
 
             emailListAdapter.notifyDataSetChanged();

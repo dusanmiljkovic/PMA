@@ -94,8 +94,8 @@ public class CreateEmailActivity extends BaseActivity {
 
     private void saveToDatabase(){
         String to = emailTo.getText().toString().trim();
-        String subject = emailTo.getText().toString().trim();
-        String content = emailTo.getText().toString().trim();
+        String subject = emailSubject.getText().toString().trim();
+        String content = emailContent.getText().toString().trim();
         message.to = to;
         message.subject = subject;
         message.content = content;

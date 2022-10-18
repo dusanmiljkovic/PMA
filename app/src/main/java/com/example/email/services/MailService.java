@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.email.database.MailDatabase;
 import com.example.email.entities.Account;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -174,6 +175,14 @@ public class MailService {
             msg.setSubject(message.subject);
             msg.setText(message.content);
             Transport.send(msg);
+            Folder[] folders = store.getDefaultFolder().list("*");
+            for (Folder folder: folders) {
+                if (Objects.equals(folder.getName(), "Sent Mail")){
+                    com.example.email.entities.Folder folderInDb = db.folderDao().findByName("Sent Mail");
+                    message.folderId = folderInDb.id;
+                    db.messageDao().insertAll(message);
+                }
+            }
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -187,25 +196,27 @@ public class MailService {
                 store = session.getStore("imaps");
                 store.connect("imap.gmail.com", account.username, account.password);
             }
-            Folder draftsMailBoxFolder = store.getFolder("Drafts");//[Gmail]/Drafts
-            if (draftsMailBoxFolder.exists()) {
-                draftsMailBoxFolder.open(Folder.READ_WRITE);
-                MimeMessage draftMessage = new MimeMessage(session);
-                draftMessage.setFrom(new InternetAddress(account.username));
-                if (message.to != "")
-                    draftMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.to));
-                if (message.subject != "")
-                    draftMessage.setSubject(message.subject);
-                if (message.content != "")
-                    draftMessage.setText(message.content);
-                draftMessage.setFlag(Flags.Flag.DRAFT, true);
-                MimeMessage []draftMessages = {draftMessage};
-                draftsMailBoxFolder.appendMessages(draftMessages);
+            Folder[] folders = store.getDefaultFolder().list("*");
+            for (Folder folder: folders) {
+                if (Objects.equals(folder.getName(), "Drafts")){
+                    folder.open(Folder.READ_WRITE);
+                    MimeMessage draftMessage = new MimeMessage(session);
+                    draftMessage.setFrom(new InternetAddress(account.username));
+                    if (message.to != "")
+                        draftMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.to));
+                    if (message.subject != "")
+                        draftMessage.setSubject(message.subject);
+                    if (message.content != "")
+                        draftMessage.setText(message.content);
+                    draftMessage.setFlag(Flags.Flag.DRAFT, true);
+                    MimeMessage []draftMessages = {draftMessage};
+                    folder.appendMessages(draftMessages);
 
-                com.example.email.entities.Folder folder = db.folderDao().findByName("Drafts");
-                message.folderId = folder.id;
+                    com.example.email.entities.Folder folderInDb = db.folderDao().findByName("Drafts");
+                    message.folderId = folderInDb.id;
 
-                db.messageDao().insertAll(message);
+                    db.messageDao().insertAll(message);
+                }
             }
         }catch (MessagingException e){
             System.out.println("An error occurred while saving a mail to drafts.");
