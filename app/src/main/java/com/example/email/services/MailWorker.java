@@ -138,7 +138,7 @@ public class MailWorker extends Worker {
     private String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             if (p.getContent() instanceof String) {
-                String s = (String)p.getContent();
+                String s = MimeUtility.decodeText((String) p.getContent());
                 textIsHtml = p.isMimeType("text/html");
                 return s;
             } else if (p.getContent() instanceof QPDecoderStream) {
@@ -151,7 +151,7 @@ public class MailWorker extends Worker {
                     }
                     baos.write(c);
                 }
-                String s = baos.toString();
+                String s = MimeUtility.decodeText(baos.toString());
                 textIsHtml = p.isMimeType("text/html");
                 return s;
             }

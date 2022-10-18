@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -73,11 +74,13 @@ public class EmailActivity extends BaseActivity {
         tEmailContent.getSettings().setBuiltInZoomControls(true);
         tEmailContent.getSettings().setJavaScriptEnabled(true);
         tEmailContent.getSettings().setDomStorageEnabled(true);
+        WebSettings settings = tEmailContent.getSettings();
+        settings.setDefaultTextEncodingName("utf-8");
         if (message.textIsHtml) {
             tEmailContent.loadDataWithBaseURL("", message.content, "text/html; charset=utf-8", "utf-8", null);
         }
         else {
-            tEmailContent.loadData(message.content, "text; charset=utf-8", "utf-8");
+            tEmailContent.loadDataWithBaseURL("", message.content, "text/plain; charset=utf-8", "utf-8", null);
         }
     }
 
