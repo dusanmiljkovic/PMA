@@ -19,7 +19,7 @@
         <entry key="app/src/main/res/layout/activity_create_contact.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/activity_create_email.xml" value="0.10416666666666667" />
         <entry key="app/src/main/res/layout/activity_create_folder.xml" value="0.37575946873565336" />
-        <entry key="app/src/main/res/layout/activity_email.xml" value="0.25521189371744785" />
+        <entry key="app/src/main/res/layout/activity_email.xml" value="0.3296854654947916" />
         <entry key="app/src/main/res/layout/activity_emails.xml" value="0.10081053698074975" />
         <entry key="app/src/main/res/layout/activity_folder.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/activity_folders.xml" value="0.161231884057971" />
@@ -31,7 +31,7 @@
         <entry key="app/src/main/res/layout/app_bar_base.xml" value="0.15932117527862208" />
         <entry key="app/src/main/res/layout/contact_list_item.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/content_base.xml" value="0.15932117527862208" />
-        <entry key="app/src/main/res/layout/email_list_item.xml" value="0.5535714285714286" />
+        <entry key="app/src/main/res/layout/email_list_item.xml" value="0.48694805100535227" />
         <entry key="app/src/main/res/layout/email_sender_details.xml" value="0.3300423131170663" />
         <entry key="app/src/main/res/layout/folder_list_item.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.15932117527862208" />

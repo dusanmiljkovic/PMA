@@ -7,9 +7,12 @@ import androidx.room.TypeConverters;
 
 import com.example.email.entities.converters.DateConverter;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
 
 @Entity
@@ -52,6 +55,15 @@ public class Message {
     }
 
     public String getReceivedDateString() {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(receivedDate.getTime()), ZoneId.systemDefault()).toString();
+        LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(receivedDate.getTime()), ZoneId.systemDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        if (formatter.format(receivedDate).equals(formatter.format(Date.from(Instant.now())))) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm");
+            return ldt.format(dtf);
+        }
+        else {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d LLL yy");
+            return ldt.format(dtf);
+        }
     }
 }

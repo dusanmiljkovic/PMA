@@ -1,5 +1,6 @@
 package com.example.email.adapters.viewholders;
 
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,10 @@ import com.example.email.entities.Message;
 
 import org.jsoup.Jsoup;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class EmailViewHolder extends RecyclerView.ViewHolder {

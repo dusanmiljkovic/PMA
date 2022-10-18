@@ -29,6 +29,7 @@ public class EmailActivity extends BaseActivity {
     private Toolbar toolbar;
     private TextView tEmailFrom;
     private TextView tEmailTo;
+    private TextView tEmailDateTime;
     private TextView tEmailSubject;
     private WebView tEmailContent;
     private ImageView ivSenderImage;
@@ -45,6 +46,7 @@ public class EmailActivity extends BaseActivity {
         service = new MailService(EmailActivity.this);
         tEmailFrom = findViewById(R.id.email_from);
         tEmailTo = findViewById(R.id.email_to);
+        tEmailDateTime = findViewById(R.id.email_date_time);
         tEmailSubject = findViewById(R.id.email_subject);
         tEmailContent = findViewById(R.id.email_content);
         ivSenderImage = findViewById(R.id.email_sender_icon);
@@ -64,6 +66,7 @@ public class EmailActivity extends BaseActivity {
 
         tEmailFrom.setText(message.from.split("<")[0]);
         tEmailTo.setText(message.to);
+        tEmailDateTime.setText(message.getReceivedDateString());
         tEmailSubject.setText(message.subject);
         ivSenderImage.setBackgroundResource(R.mipmap.ic_launcher);
 
