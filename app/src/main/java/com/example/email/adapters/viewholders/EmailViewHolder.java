@@ -46,10 +46,16 @@ public class EmailViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(Message message) {
+    public void bind(Message message, boolean revert) {
         senderImage.setBackgroundResource(R.mipmap.ic_launcher);
-        if (message.from != null)
-            tSender.setText(message.from.split(" <")[0]);
+        if (revert){
+            if (message.to != null)
+                tSender.setText(message.to);
+        }
+        else{
+            if (message.from != null)
+                tSender.setText(message.from.split(" <")[0]);
+        }
         if (message.subject != null)
             tSubject.setText(message.subject);
         if (message.content != null){

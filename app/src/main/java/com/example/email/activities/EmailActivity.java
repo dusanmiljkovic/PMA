@@ -65,6 +65,7 @@ public class EmailActivity extends BaseActivity {
         int messageId = extras.getInt("MessageId");
         message = db.messageDao().findById(messageId);
 
+
         tEmailFrom.setText(message.from.split("<")[0]);
         tEmailTo.setText(message.to);
         tEmailDateTime.setText(message.getReceivedDateString());

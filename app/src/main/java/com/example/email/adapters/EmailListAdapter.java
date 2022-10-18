@@ -19,6 +19,7 @@ import com.example.email.entities.Message;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
@@ -138,7 +139,9 @@ public class EmailListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private void populateItemRows(EmailViewHolder viewHolder, int position) {
         final Message email = messages.get(position);
-        viewHolder.bind(email);
+        Folder folder = db.folderDao().findById(email.folderId);
+        boolean revertFromAndTo = (Objects.equals(folder.name, "Sent Mail") || Objects.equals(folder.name, "Drafts"));
+        viewHolder.bind(email, revertFromAndTo);
     }
 
 }
