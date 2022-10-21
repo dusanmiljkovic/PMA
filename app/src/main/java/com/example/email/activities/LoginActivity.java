@@ -2,6 +2,7 @@ package com.example.email.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -19,7 +20,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
+import javax.mail.Session;
+import javax.mail.Store;
 
 public class LoginActivity extends AppCompatActivity {
     private MailDatabase db;
@@ -37,13 +42,17 @@ public class LoginActivity extends AppCompatActivity {
         textInputPassword = findViewById(R.id.login_password);
         MaterialButton buttonLogin = findViewById(R.id.login_button);
 
+        if (savedInstanceState != null){
+            textInputUsername.getEditText().setText(savedInstanceState.getString("username"));
+            textInputPassword.getEditText().setText(savedInstanceState.getString("password"));
+        }
+
         buttonLogin.setOnClickListener(view -> {
             username = Objects.requireNonNull(textInputUsername.getEditText()).getText().toString();
             password = Objects.requireNonNull(textInputPassword.getEditText()).getText().toString();
             if (!username.isEmpty() && !password.isEmpty()) {
                 Intent intent = new Intent(getApplicationContext(), EmailsActivity.class);
-                //TODO: add login functionality
-                if (true) {
+                if (tryLogin()) {
                     saveLoginCredentials();
                     addWorker();
                     startActivity(intent);
@@ -57,6 +66,14 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Username and password are required!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("username", textInputUsername.getEditText().getText().toString());
+        savedInstanceState.putString("password", textInputPassword.getEditText().getText().toString());
     }
 
     private void saveLoginCredentials(){
@@ -89,5 +106,14 @@ public class LoginActivity extends AppCompatActivity {
         WorkManager
                 .getInstance(LoginActivity.this)
                 .enqueue(uploadWorkRequest);
+    }
+
+    private boolean tryLogin(){
+        boolean loggedIn = false;
+        try{
+            loggedIn = true;
+        }catch ( Exception ignored) {
+        }
+        return loggedIn;
     }
 }
